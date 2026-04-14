@@ -1,12 +1,19 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+// Adaptadores
+import { FacturaStorageAdapter } from './infrastructure/adapters/factura-storage.adapter';
+import { PdfHtmlAdapter } from './infrastructure/adapters/pdf-html.adapter';
+
+// Tokens de inyección (estos son valores, no tipos)
+export const FACTURA_REPOSITORY_TOKEN = 'FacturaRepositoryPort';
+export const PDF_GENERATOR_TOKEN = 'PdfGeneratorPort';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay())
+    provideRouter(routes),
+    { provide: FACTURA_REPOSITORY_TOKEN, useClass: FacturaStorageAdapter },
+    { provide: PDF_GENERATOR_TOKEN, useClass: PdfHtmlAdapter }
   ]
 };

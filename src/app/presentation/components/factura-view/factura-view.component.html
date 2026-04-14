@@ -1,0 +1,115 @@
+<div class="portal-wrapper">
+  
+  <header class="navbar-3d">
+    <div class="header-content">
+      <div class="brand">
+        <img src="logo.png" alt="Intuito S.A." width="180" height="40">
+      </div>
+      <a href="https://www.facturasintuitosa.com/" target="_blank" class="btn-login-3d">
+        Iniciar Sesión
+      </a>
+    </div>
+  </header>
+
+  <main class="portal-main">
+    <div class="contenedor-documento">
+
+      <!-- Si existe factura -->
+      <ng-container *ngIf="facturaData as factura; else cargando">
+
+        <!-- Header -->
+        <div class="fila-unida border-b">
+          <div class="header-flex">
+            <h1>Factura {{ factura.numero }}</h1>
+            <span class="autorizado-vivid">✔ Autorizado</span>
+          </div>
+        </div>
+
+        <!-- Datos -->
+        <div class="fila-unida border-b bg-gris-tenue">
+          <div class="grid-datos">
+            <p>
+              <strong>Emisor:</strong> 
+              {{ factura.emisor.nombre }} 
+              | RUC: {{ factura.emisor.ruc }}
+            </p>
+
+            <p>
+              <strong>Receptor:</strong> 
+              {{ factura.receptor.nombre }} 
+              | Fecha: {{ factura.fechaEmision | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="fila-unida">
+          <div class="botones-container">
+            <button class="btn-action" (click)="generarPDF()" [disabled]="loading">
+              <span class="icon-svg red">PDF</span> 
+              {{ loading ? 'Procesando...' : 'Descargar PDF (RIDE)' }}
+            </button>
+
+            <button class="btn-action" (click)="descargarXML()">
+              <span class="icon-svg orange">XML</span> Descargar XML
+            </button>
+          </div>
+        </div>
+
+        <!-- Visor -->
+        <div class="visor-oscuro-integrado">
+          <div class="hoja-blanca" id="ride-container">
+           
+            <div class="ride-card-header-v2">
+              
+              <div class="col-logo">
+                <img src="deunalogo.png" alt="deuna!" class="img-deuna">
+                <p class="pichincha-text">una solución de Banco Pichincha</p>
+              </div>
+              
+              <div class="col-info-v2">
+                <div class="bloque-maquina-rojo">
+                  
+                  <p>
+                    <span class="label">R.U.C:</span> 
+                    <span class="data-roja">
+                      {{ factura.emisor.ruc }}
+                    </span>
+                  </p>
+
+                  <p class="tipo-documento">FACTURA</p>
+
+                  <p>
+                    <span class="label">No.:</span> 
+                    <span class="data-roja">
+                      {{ factura.numero }}
+                    </span>
+                  </p>
+                  
+                  <div class="seccion-auth">
+                    <p class="auth-label">NÚMERO DE AUTORIZACIÓN:</p>
+                    <p class="auth-key-roja">
+                      000000000000000000000000000000000000000000
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </ng-container>
+
+      <!-- Template de carga -->
+      <ng-template #cargando>
+        <div class="fila-unida border-b bg-gris-tenue">
+          <p>Cargando datos del comprobante...</p>
+        </div>
+      </ng-template>
+
+    </div>
+  </main>
+</div>
