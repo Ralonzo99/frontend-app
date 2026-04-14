@@ -2,8 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { Factura } from '../../domain/entities/factura.entity';
 import { FacturaRepositoryPort } from '../../domain/ports/factura-repository.port';
 import { PdfGeneratorPort } from '../../domain/ports/pdf-generator.port';
-
-// 👇 IMPORTA LOS TOKENS
 import { FACTURA_REPOSITORY_TOKEN, PDF_GENERATOR_TOKEN } from '../../../app.config';
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +12,12 @@ export class FacturaApplicationService {
     @Inject(PDF_GENERATOR_TOKEN) private pdfGenerator: PdfGeneratorPort
   ) {}
 
+  async guardarFactura(factura: Factura): Promise<Factura> {
+    return this.facturaRepo.save(factura);
+  }
+
   async generarYEnviarPDF(facturaId: string, elementoId: string): Promise<string> {
+
     const factura = await this.facturaRepo.findById(facturaId);
     if (!factura) throw new Error('Factura no encontrada');
 

@@ -13,5 +13,5 @@ export interface Factura {
     nombre: string;
   };
 
-  claveAcceso?: string;
+  numeroAutorizacion?: string;
 }

@@ -34,6 +34,12 @@ export class FacturaStorageAdapter implements FacturaRepositoryPort {
   }
 
   async save(factura: Factura): Promise<Factura> {
+
+    if (!this.isBrowser) {
+      // En SSR simplemente retornamos sin guardar
+      return factura;
+    }
+
     factura.id = Date.now().toString();
     this.facturas.push(factura);
     this.guardarFacturas();
@@ -41,30 +47,46 @@ export class FacturaStorageAdapter implements FacturaRepositoryPort {
   }
 
   async findById(id: string): Promise<Factura | null> {
+
+    if (!this.isBrowser) return null;
+
     return this.facturas.find(f => f.id === id) || null;
   }
 
   async findAll(): Promise<Factura[]> {
+
+    if (!this.isBrowser) return [];
+
     return this.facturas;
   }
 
   async update(id: string, factura: Factura): Promise<Factura> {
+
+    if (!this.isBrowser) return factura;
+
     const index = this.facturas.findIndex(f => f.id === id);
+
     if (index !== -1) {
       this.facturas[index] = { ...factura, id };
       this.guardarFacturas();
       return this.facturas[index];
     }
+
     throw new Error('Factura no encontrada');
   }
 
   async delete(id: string): Promise<boolean> {
+
+    if (!this.isBrowser) return false;
+
     const index = this.facturas.findIndex(f => f.id === id);
+
     if (index !== -1) {
       this.facturas.splice(index, 1);
       this.guardarFacturas();
       return true;
     }
+
     return false;
   }
 }

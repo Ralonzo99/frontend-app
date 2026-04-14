@@ -15,31 +15,30 @@ export class FacturaViewComponent implements OnInit {
   facturaData: Factura | null = null;
   loading = false;
 
-  constructor(
-    private facturaAppService: FacturaApplicationService
-  ) {}
+  constructor(private facturaAppService: FacturaApplicationService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.facturaData = {
-      id: '1',
+    const facturaInicial: Factura = {
+      id: '',
       numero: '001-180-000000001',
       fechaEmision: new Date(),
       estado: 'PENDIENTE',
-
       emisor: {
         nombre: 'Mi Empresa S.A.',
         ruc: '1793206667001'
       },
-
       receptor: {
         nombre: 'Cliente Demo'
-      }
+      },
+      numeroAutorizacion: '12345678901234567890'
+    };
 
-    } as Factura;
+    this.facturaData = await this.facturaAppService.guardarFactura(facturaInicial);
   }
 
   async generarPDF() {
+
     if (!this.facturaData) return;
 
     try {
@@ -47,8 +46,10 @@ export class FacturaViewComponent implements OnInit {
 
       await this.facturaAppService.generarYEnviarPDF(
         this.facturaData.id,
-        'factura-html'
+        'ride-container'
       );
+
+      console.log('PDF generado correctamente');
 
     } catch (error) {
       console.error(error);
