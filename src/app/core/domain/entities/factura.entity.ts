@@ -3,15 +3,13 @@ export interface Factura {
   numero: string;
   fechaEmision: Date;
   estado: string;
-
   emisor: {
     ruc: string;
     nombre: string;
   };
-
   receptor: {
     nombre: string;
   };
-
   numeroAutorizacion?: string;
+  pdfBase64?: string; // Campo vital para el visor
 }
