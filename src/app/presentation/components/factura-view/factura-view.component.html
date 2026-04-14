@@ -1,25 +1,15 @@
 <div class="portal-wrapper">
-  
+
   <header class="navbar-3d">
     <div class="header-content">
-      
+
       <div class="brand">
-        <!-- LOGO corregido -->
-        <img 
-          src="/logo.png" 
-          alt="Intuito S.A." 
-          width="180" 
-          height="40"
-          loading="eager"
-        >
+        <img src="/logo.png" alt="Intuito S.A." width="180" height="40">
       </div>
 
-      <a 
-        href="https://www.facturasintuitosa.com/" 
-        target="_blank" 
-        class="btn-login-3d"
-        rel="noopener"
-      >
+      <a href="https://www.facturasintuitosa.com/"
+         target="_blank"
+         class="btn-login-3d">
         Iniciar Sesión
       </a>
 
@@ -27,14 +17,15 @@
   </header>
 
   <main class="portal-main">
+
     <div class="contenedor-documento">
 
-      <ng-container *ngIf="facturaData as factura; else cargando">
+      <ng-container *ngIf="facturaData; else cargando">
 
         <!-- HEADER FACTURA -->
         <div class="fila-unida border-b">
           <div class="header-flex">
-            <h1>Factura {{ factura.numero }}</h1>
+            <h1>Factura {{ facturaData.numero }}</h1>
             <span class="autorizado-vivid">✔ Autorizado</span>
           </div>
         </div>
@@ -43,17 +34,8 @@
         <div class="fila-unida border-b bg-gris-tenue">
           <div class="grid-datos">
 
-            <p>
-              <strong>Emisor:</strong> 
-              {{ factura.emisor.nombre }} 
-              | RUC: {{ factura.emisor.ruc }}
-            </p>
-
-            <p>
-              <strong>Receptor:</strong> 
-              {{ factura.receptor.nombre }} 
-              | Fecha: {{ factura.fechaEmision | date:'dd/MM/yyyy' }}
-            </p>
+            <p><strong>Emisor:</strong> {{ facturaData.emisor.nombre }} | RUC: {{ facturaData.emisor.ruc }}</p>
+            <p><strong>Receptor:</strong> {{ facturaData.receptor.nombre }} | Fecha: {{ facturaData.fechaEmision | date:'dd/MM/yyyy' }}</p>
 
           </div>
         </div>
@@ -62,93 +44,78 @@
         <div class="fila-unida">
           <div class="botones-container">
 
-            <button 
-              class="btn-action" 
-              (click)="generarPDF()" 
-              [disabled]="loading"
-            >
-              <span class="icon-svg red">PDF</span> 
-              {{ loading ? 'Procesando...' : 'Descargar PDF (RIDE)' }}
+            <button class="btn-action" (click)="descargarPDF()">
+              <span class="icon-box pdf-icon">PDF</span>
+              Descargar PDF
             </button>
 
-            <button 
-              class="btn-action" 
-              (click)="descargarXML()"
-            >
-              <span class="icon-svg orange">XML</span> 
+            <button class="btn-action" (click)="descargarXML()">
+              <span class="icon-box xml-icon">XML</span>
               Descargar XML
             </button>
 
           </div>
         </div>
 
-        <!-- VISOR -->
-        <div class="visor-oscuro-integrado">
-          <div class="hoja-blanca" id="ride-container">
-           
-            <div class="ride-card-header-v2">
-              
-              <!-- LOGO DEUNA corregido -->
-              <div class="col-logo">
-                <img 
-                  src="/deunalogo.png" 
-                  alt="deuna!" 
-                  class="img-deuna"
-                  width="140"
-                  height="60"
-                  loading="lazy"
-                >
-                <p class="pichincha-text">
-                  una solución de Banco Pichincha
-                </p>
-              </div>
-              
-              <!-- BLOQUE ROJO -->
-              <div class="col-info-v2">
-                <div class="bloque-maquina-rojo">
-                  
-                  <p>
-                    <span class="label">R.U.C:</span> 
-                    <span class="data-roja">
-                      {{ factura.emisor.ruc }}
-                    </span>
-                  </p>
+        <!-- VISOR PDF -->
+        <div class="visor-container">
 
-                  <p class="tipo-documento">FACTURA</p>
+          <div class="pdf-card">
 
-                  <p>
-                    <span class="label">No.:</span> 
-                    <span class="data-roja">
-                      {{ factura.numero }}
-                    </span>
-                  </p>
-                  
-                  <div class="seccion-auth">
-                    <p class="auth-label">
-                      NÚMERO DE AUTORIZACIÓN:
-                    </p>
-                    <p class="auth-key-roja">
-                      000000000000000000000000000000000000000000
-                    </p>
-                  </div>
+            <div class="pdf-toolbar">
+              <span>Visualizador de Documento</span>
+            </div>
 
-                </div>
-              </div>
-
+            <div class="pdf-body">
+              <iframe [src]="pdfUrl" class="pdf-frame"></iframe>
             </div>
 
           </div>
+
+        </div>
+
+        <!-- BANNER INFERIOR -->
+        <div class="portal-info-banner">
+
+          <div class="portal-left">
+            <img src="/logo.png" class="portal-logo">
+          </div>
+
+          <div class="portal-center">
+
+            <p class="portal-text">
+              Accede al historial de tus comprobantes recibidos
+            </p>
+
+            <p class="portal-subtext">
+              <span class="check-green">✔</span>
+              En un clic filtrar y descargar PDF / XML cuando lo necesites
+            </p>
+
+          </div>
+
+          <div class="portal-right">
+
+            <a href="https://www.facturasintuitosa.com/"
+               target="_blank"
+               class="portal-btn">
+              Acceder al Portal
+            </a>
+
+          </div>
+
         </div>
 
       </ng-container>
 
-      <!-- LOADING -->
       <ng-template #cargando>
-        <div class="fila-unida border-b bg-gris-tenue">
+        <div class="fila-unida">
           <p>Cargando datos del comprobante...</p>
         </div>
       </ng-template>
 
     </div>
+
   </main>
+
 </div>

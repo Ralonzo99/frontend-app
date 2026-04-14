@@ -1,154 +1,232 @@
-/* --- CONFIGURACIÓN BASE --- */
+
+/* ============================= */
+/* BASE */
+/* ============================= */
+
 .portal-wrapper {
-  background-color: #f8f9fa;
+  background: #f4f6f9;
   min-height: 100vh;
-  padding: 20px 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* --- NAVBAR: BOTÓN A LA DERECHA --- */
-.header-content {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between; /* Empuja el botón a la derecha del logo */
-  align-items: center;
-  padding: 0 30px;
-}
+/* ============================= */
+/* HEADER CENTRADO REAL */
+/* ============================= */
 
 .navbar-3d {
   background: #fff;
-  max-width: 1100px;
-  margin: 0 auto 20px;
-  padding: 15px 0; /* Ajustado para que el padding lateral venga del content */
-  border-radius: 8px;
   border: 1px solid #ddd;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+
+  max-width: 1100px;
+  margin: 12px auto;
+
+  padding: 10px 0;
 }
 
+/* 🔥 CLAVE DEL CENTRADO */
+.header-content {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 30px;
+}
+
+/* LOGO */
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+/* BOTÓN */
 .btn-login-3d {
   background-color: #0061af;
   color: white;
-  padding: 10px 25px;
-  border-radius: 5px;
+
+  padding: 9px 18px;
+  border-radius: 6px;
+
+  font-weight: 600;
   text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-login-3d:hover {
   background-color: #004a85;
 }
 
-/* --- ICONOS MODERNOS --- */
-.icon-svg {
-  font-weight: bold;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-right: 8px;
-  color: white;
-}
+/* ============================= */
+/* CONTENEDOR PRINCIPAL */
+/* ============================= */
 
-.icon-svg.red { background-color: #e74c3c; } /* Rojo para PDF */
-.icon-svg.orange { background-color: #f39c12; } /* Naranja para XML */
-
-.btn-action {
-  background: white;
-  border: 1px solid #dcdde1;
-  padding: 8px 16px;
-  margin-right: 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-}
-
-/* --- EL RESTO DE TU ESTILO (BLOQUE UNIDO) --- */
 .contenedor-documento {
   max-width: 1100px;
   margin: 0 auto;
+
   background: white;
-  border: 1px solid #bbb;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================= */
+/* SECCIONES */
+/* ============================= */
+
+.fila-unida {
+  padding: 12px 18px;
+}
+
+.border-b { border-bottom: 1px solid #eee; }
+.bg-gris-tenue { background: #fafafa; }
+
+.header-flex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.autorizado-vivid {
+  background: #28a745;
+  color: white;
+  padding: 4px 10px;
+  font-size: 12px;
   border-radius: 4px;
+}
+
+/* ============================= */
+/* BOTONES */
+/* ============================= */
+
+.botones-container {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-box {
+  width: 26px;
+  height: 18px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  margin-right: 6px;
+  border-radius: 4px;
+}
+
+.pdf-icon { background: #e74c3c; }
+.xml-icon { background: #f39c12; }
+
+/* ============================= */
+/* VISOR */
+/* ============================= */
+
+.visor-container {
+  padding: 15px;
+  background: #525659;
+}
+
+.pdf-card {
+  background: #2f343a;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.fila-unida { padding: 20px 30px; }
-.border-b { border-bottom: 1px solid #eee; }
-.bg-gris-tenue { background-color: #fcfcfc; }
-
-.autorizado-vivid {
-  background-color: #28a745;
+.pdf-toolbar {
+  background: #1e2227;
   color: white;
-  padding: 8px 15px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 14px;
+  padding: 8px 12px;
+  font-size: 13px;
 }
 
-.header-flex { display: flex; align-items: center; gap: 20px; }
-
-/* --- VISOR Y RIDE --- */
-.visor-oscuro-integrado {
-  background-color: #525659;
-  padding: 40px 20px;
-}
-
-.hoja-blanca {
-  background: white;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 40px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
-}
-
-.img-deuna {
-  width: 170px;
-  height: auto;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.ride-card-header-v2 {
+.pdf-body {
   display: flex;
-  border: 1px solid #000;
-  border-radius: 10px;
-  padding: 20px;
+  justify-content: center;
+  padding: 10px;
 }
 
-.col-logo { width: 50%; }
-.col-info-v2 {
-  width: 50%;
-  border-left: 1px solid #000;
-  padding-left: 20px;
+.pdf-frame {
+  width: 100%;
+  max-width: 980px;
+  height: 380px;
+
+  border: none;
+  background: white;
+  border-radius: 6px;
 }
 
-/* --- BLOQUE MÁQUINA ROJO --- */
-.bloque-maquina-rojo {
-  background-color: #ffffff;
-  color: #c00000;
-  font-family: 'Courier New', Courier, monospace;
-  text-align: left;
-  font-weight: bold;
-  line-height: 1.2;
+/* ============================= */
+/* BANNER FINAL */
+/* ============================= */
+
+.portal-info-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 18px;
+  border-top: 1px solid #e5e5e5;
+  background: white;
 }
 
-.bloque-maquina-rojo p { margin: 0; color: #c00000; }
-
-.tipo-documento {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 5px 0 !important;
+.portal-logo {
+  width: 80px;
 }
 
-.bloque-maquina-rojo .label, 
-.bloque-maquina-rojo .auth-label { font-size: 13px; }
-.data-roja { font-size: 15px; }
-.auth-label { display: block; margin-top: 10px !important; font-size: 11px; }
-.auth-key-roja {
+.portal-center {
+  flex: 1;
+  padding: 0 15px;
+}
+
+.portal-text {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.portal-subtext {
   font-size: 11px;
-  word-break: break-all;
-  color: #c00000;
+  color: #666;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.check-green {
+  color: #28a745;
+  margin-right: 5px;
+}
+
+.portal-btn {
+  background: #0061af;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.portal-btn:hover {
+  background: #004a85;
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FacturaApplicationService } from '../../../core/application/services/factura-application.service';
-import { Factura } from '../../../core/domain/entities/factura.entity';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-factura-view',
@@ -12,53 +11,73 @@ import { Factura } from '../../../core/domain/entities/factura.entity';
 })
 export class FacturaViewComponent implements OnInit {
 
-  facturaData: Factura | null = null;
-  loading = false;
+  facturaData: any = {};
 
-  constructor(private facturaAppService: FacturaApplicationService) {}
+  pdfUrl!: SafeResourceUrl;
 
-  async ngOnInit(): Promise<void> {
+  zoom = 1;
 
-    const facturaInicial: Factura = {
-      id: '',
+  constructor(private sanitizer: DomSanitizer) {}
+
+  ngOnInit(): void {
+
+    // 🔥 MOCK FACTURA
+    this.facturaData = {
       numero: '001-180-000000001',
       fechaEmision: new Date(),
-      estado: 'PENDIENTE',
       emisor: {
         nombre: 'Mi Empresa S.A.',
         ruc: '1793206667001'
       },
       receptor: {
         nombre: 'Cliente Demo'
-      },
-      numeroAutorizacion: '12345678901234567890'
+      }
     };
 
-    this.facturaData = await this.facturaAppService.guardarFactura(facturaInicial);
+    // 📄 PDF desde public/
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      '/Semana-2-Pasantias.pdf'
+    );
   }
 
-  async generarPDF() {
+  // =========================
+  // 🔍 ZOOM
+  // =========================
+  zoomIn() {
+    this.zoom += 0.1;
+  }
 
-    if (!this.facturaData) return;
+  zoomOut() {
+    if (this.zoom > 0.5) this.zoom -= 0.1;
+  }
 
-    try {
-      this.loading = true;
+  resetZoom() {
+    this.zoom = 1;
+  }
 
-      await this.facturaAppService.generarYEnviarPDF(
-        this.facturaData.id,
-        'ride-container'
-      );
-
-      console.log('PDF generado correctamente');
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loading = false;
-    }
+  // =========================
+  // ⬇ DESCARGAS
+  // =========================
+  descargarPDF() {
+    const link = document.createElement('a');
+    link.href = '/Semana-2-Pasantias.pdf';
+    link.download = 'factura.pdf';
+    link.click();
   }
 
   descargarXML() {
-    console.log('Descargando XML...');
+    // 🔥 MOCK XML
+    const xmlContent = `
+      <factura>
+        <numero>${this.facturaData.numero}</numero>
+        <emisor>${this.facturaData.emisor.nombre}</emisor>
+      </factura>
+    `;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'factura.xml';
+    link.click();
   }
 }
