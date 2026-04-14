@@ -1,232 +1,272 @@
+/* =========================
+   ESTILOS DE FUENTE ESPECÍFICOS (ARIAL)
+========================= */
 
-/* ============================= */
-/* BASE */
-/* ============================= */
+.arial-bold {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.fuente-arial-black {
+  font-family: "Arial Black", Arial, sans-serif;
+  font-weight: 900;
+}
+
+.arial-narrow {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  letter-spacing: -0.5px;
+}
+
+/* =========================
+   FULLSCREEN BASE
+========================= */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  background: #F4F7F9;
+  font-family: Arial, Helvetica, sans-serif; /* Arial Regular base */
+  overflow: hidden;
+}
 
 .portal-wrapper {
-  background: #f4f6f9;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* ============================= */
-/* HEADER CENTRADO REAL */
-/* ============================= */
-
-.navbar-3d {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-
-  max-width: 1100px;
-  margin: 12px auto;
-
-  padding: 10px 0;
-}
-
-/* 🔥 CLAVE DEL CENTRADO */
-.header-content {
-  max-width: 1100px;
-  margin: 0 auto;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 0 30px;
-}
-
-/* LOGO */
-.brand {
-  display: flex;
-  align-items: center;
-}
-
-/* BOTÓN */
-.btn-login-3d {
-  background-color: #0061af;
-  color: white;
-
-  padding: 9px 18px;
-  border-radius: 6px;
-
-  font-weight: 600;
-  text-decoration: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-login-3d:hover {
-  background-color: #004a85;
-}
-
-/* ============================= */
-/* CONTENEDOR PRINCIPAL */
-/* ============================= */
-
-.contenedor-documento {
-  max-width: 1100px;
-  margin: 0 auto;
-
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* ============================= */
-/* SECCIONES */
-/* ============================= */
+/* =========================
+   HEADER
+========================= */
 
-.fila-unida {
-  padding: 12px 18px;
+.navbar-3d {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #E0E4E8;
 }
 
-.border-b { border-bottom: 1px solid #eee; }
-.bg-gris-tenue { background: #fafafa; }
-
-.header-flex {
+.header-content {
+  width: 100%;
+  padding: 10px 40px;
+  box-sizing: border-box;
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   align-items: center;
 }
 
-.autorizado-vivid {
-  background: #28a745;
-  color: white;
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 4px;
+.brand img {
+  height: 35px;
+  width: auto;
 }
 
-/* ============================= */
-/* BOTONES */
-/* ============================= */
+.btn-login-3d {
+  background: #0061af;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* =========================
+   MAIN Y CONTENEDOR
+========================= */
+
+.portal-main {
+  width: 100%;
+  flex: 1;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.contenedor-documento {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #E0E4E8;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fila-unida {
+  padding: 15px 25px;
+  border-bottom: 1px solid #E0E4E8;
+}
+
+.border-b { border-bottom: 1px solid #E0E4E8; }
+
+.bg-gris-tenue {
+  background: #F8F9FA;
+  color: #555;
+}
+
+.fuente-datos {
+  font-size: 14px;
+}
+
+/* =========================
+   TITULO Y AUTORIZADO (JUNTOS)
+========================= */
+
+.header-row-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.factura-titulo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0;
+  color: #333;
+}
+
+.autorizado-vivid {
+  background: #D4EDDA;
+  color: #155724;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* =========================
+   BOTONES DE ACCION
+========================= */
 
 .botones-container {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-action {
-  border: 1px solid #ddd;
-  background: white;
-  padding: 6px 12px;
+  border: 1px solid #E0E4E8;
+  background: #fff;
+  padding: 8px 16px;
   border-radius: 6px;
   font-size: 12px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
 }
 
 .icon-box {
-  width: 26px;
-  height: 18px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  margin-right: 6px;
+  padding: 2px 6px;
   border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 10px;
+  margin-right: 10px;
 }
 
-.pdf-icon { background: #e74c3c; }
-.xml-icon { background: #f39c12; }
+.pdf-icon { background: #E74C3C; }
+.xml-icon { background: #F39C12; }
 
-/* ============================= */
-/* VISOR */
-/* ============================= */
+/* =========================
+   VISOR PDF
+========================= */
 
 .visor-container {
-  padding: 15px;
+  flex: 1;
+  padding: 20px;
   background: #525659;
+  display: flex;
 }
 
 .pdf-card {
-  background: #2f343a;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
 .pdf-toolbar {
-  background: #1e2227;
-  color: white;
-  padding: 8px 12px;
-  font-size: 13px;
-}
-
-.pdf-body {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
+  background: #F8F9FA;
+  padding: 10px 15px;
+  border-bottom: 1px solid #E0E4E8;
+  font-size: 12px;
 }
 
 .pdf-frame {
   width: 100%;
-  max-width: 980px;
-  height: 380px;
-
+  flex: 1;
   border: none;
-  background: white;
-  border-radius: 6px;
 }
 
-/* ============================= */
-/* BANNER FINAL */
-/* ============================= */
+/* =========================
+   BANNER FINAL (UNIDO IZQUIERDA)
+========================= */
 
-.portal-info-banner {
+.banner-final-unido {
+  width: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.grupo-izquierdo {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
-  padding: 14px 18px;
-  border-top: 1px solid #e5e5e5;
-  background: white;
-}
-
-.portal-logo {
-  width: 80px;
-}
-
-.portal-center {
+  gap: 20px;
   flex: 1;
-  padding: 0 15px;
+}
+
+.portal-logo.framed {
+  width: 55px;
+  height: auto;
+  border: 1px solid #E0E4E8;
+  padding: 6px;
+  border-radius: 8px;
+  background: #fff;
+  display: block;
 }
 
 .portal-text {
   font-size: 14px;
-  font-weight: 600;
   margin: 0;
+  color: #333;
 }
 
 .portal-subtext {
-  font-size: 11px;
+  font-size: 12px;
   color: #666;
-  margin-top: 3px;
-  display: flex;
-  align-items: center;
+  margin-top: 5px;
 }
 
-.check-green {
-  color: #28a745;
-  margin-right: 5px;
+.check-verde-box {
+  background: #28A745;
+  color: white;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 11px;
+  margin-right: 6px;
 }
 
 .portal-btn {
   background: #0061af;
   color: white;
-  padding: 8px 14px;
+  padding: 10px 20px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: bold;
   text-decoration: none;
-}
-
-.portal-btn:hover {
-  background: #004a85;
+  white-space: nowrap;
 }

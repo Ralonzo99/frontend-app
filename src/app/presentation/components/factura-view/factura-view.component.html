@@ -1,10 +1,11 @@
 <div class="portal-wrapper">
 
   <header class="navbar-3d">
+
     <div class="header-content">
 
       <div class="brand">
-        <img src="/logo.png" alt="Intuito S.A." width="180" height="40">
+        <img src="/logo.png" alt="Intuito S.A.">
       </div>
 
       <a href="https://www.facturasintuitosa.com/"
@@ -14,6 +15,7 @@
       </a>
 
     </div>
+
   </header>
 
   <main class="portal-main">
@@ -22,86 +24,96 @@
 
       <ng-container *ngIf="facturaData; else cargando">
 
-        <!-- HEADER FACTURA -->
-        <div class="fila-unida border-b">
-          <div class="header-flex">
-            <h1>Factura {{ facturaData.numero }}</h1>
-            <span class="autorizado-vivid">✔ Autorizado</span>
+        <div class="fila-unida border-b header-row-left">
+          
+          <div class="factura-titulo-container">
+            <h1 class="fuente-arial-black">
+              Factura {{ facturaData.numero }}
+            </h1>
+
+            <span class="autorizado-vivid">
+              ✔ Autorizado
+            </span>
           </div>
+
         </div>
 
-        <!-- DATOS -->
-        <div class="fila-unida border-b bg-gris-tenue">
-          <div class="grid-datos">
+        <div class="fila-unida border-b bg-gris-tenue fuente-datos">
 
-            <p><strong>Emisor:</strong> {{ facturaData.emisor.nombre }} | RUC: {{ facturaData.emisor.ruc }}</p>
-            <p><strong>Receptor:</strong> {{ facturaData.receptor.nombre }} | Fecha: {{ facturaData.fechaEmision | date:'dd/MM/yyyy' }}</p>
+          <p>
+            <strong class="arial-bold">Emisor:</strong>
+            {{ facturaData.emisor.nombre }} |
+            <span class="arial-narrow">RUC: {{ facturaData.emisor.ruc }}</span>
+          </p>
 
-          </div>
+          <p>
+            <strong class="arial-bold">Receptor:</strong>
+            {{ facturaData.receptor.nombre }} |
+            Fecha: {{ facturaData.fechaEmision | date:'dd/MM/yyyy' }}
+          </p>
+
         </div>
 
-        <!-- BOTONES -->
         <div class="fila-unida">
+
           <div class="botones-container">
 
-            <button class="btn-action" (click)="descargarPDF()">
+            <button class="btn-action">
               <span class="icon-box pdf-icon">PDF</span>
-              Descargar PDF
+              Descargar PDF (RIDE)
             </button>
 
-            <button class="btn-action" (click)="descargarXML()">
+            <button class="btn-action">
               <span class="icon-box xml-icon">XML</span>
               Descargar XML
             </button>
 
           </div>
+
         </div>
 
-        <!-- VISOR PDF -->
         <div class="visor-container">
 
           <div class="pdf-card">
 
             <div class="pdf-toolbar">
-              <span>Visualizador de Documento</span>
+              Visualizador de Documento
             </div>
 
-            <div class="pdf-body">
-              <iframe [src]="pdfUrl" class="pdf-frame"></iframe>
-            </div>
+            <iframe
+              [src]="pdfUrl"
+              class="pdf-frame">
+            </iframe>
 
           </div>
 
         </div>
 
-        <!-- BANNER INFERIOR -->
-        <div class="portal-info-banner">
+        <div class="fila-unida banner-final-unido">
 
-          <div class="portal-left">
-            <img src="/logo.png" class="portal-logo">
-          </div>
+          <div class="grupo-izquierdo">
+            
+            <div class="portal-left">
+              <img src="/logo-inf.jfif" class="portal-logo framed" alt="logo inferior">
+            </div>
 
-          <div class="portal-center">
-
-            <p class="portal-text">
-              Accede al historial de tus comprobantes recibidos
-            </p>
-
-            <p class="portal-subtext">
-              <span class="check-green">✔</span>
-              En un clic filtrar y descargar PDF / XML cuando lo necesites
-            </p>
+            <div class="portal-center">
+              <p class="portal-text arial-bold">
+                Accede al historial de tus comprobantes recibidos
+              </p>
+              <p class="portal-subtext">
+                <span class="check-verde-box">✔</span> En un clic filtrar y descargar PDF / XML cuando lo necesites
+              </p>
+            </div>
 
           </div>
 
           <div class="portal-right">
-
             <a href="https://www.facturasintuitosa.com/"
                target="_blank"
                class="portal-btn">
               Acceder al Portal
             </a>
-
           </div>
 
         </div>
