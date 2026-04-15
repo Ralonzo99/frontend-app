@@ -3,15 +3,15 @@ import { FacturaViewComponent } from './presentation/components/factura-view/fac
 
 export const routes: Routes = [
   {
-    path: '', // Esto significa la página de inicio
+    path: '', // Página de inicio
     component: FacturaViewComponent
   },
   {
-    path: 'factura', // Opcional: puedes acceder vía localhost:4200/factura
+    path: 'factura',
     component: FacturaViewComponent
   },
   {
-    path: '**', // Si escriben cualquier otra cosa, redirigir a inicio
+    path: '**', // Si escriben cualquier ruta inexistente
     redirectTo: ''
   }
 ];

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'; // CORREGIDO: de @angular/core
+import { CommonModule, isPlatformBrowser } from '@angular/common'; // CORREGIDO: de @angular/common
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { FacturaApplicationService } from '../../../core/application/services/factura-application.service';
 
 @Component({
   selector: 'app-factura-view',
@@ -11,73 +12,76 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class FacturaViewComponent implements OnInit {
 
-  facturaData: any = {};
+  facturaData: any = {
+    numero: '---',
+    estado: 'Sincronizando',
+    emisor: { nombre: 'Cargando emisor...', ruc: '---' },
+    receptor: { nombre: 'Cargando receptor...' },
+    fechaEmision: null
+  };
 
-  pdfUrl!: SafeResourceUrl;
+  pdfUrl: SafeResourceUrl;
+  isLoading: boolean = true;
 
-  zoom = 1;
-
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private facturaService: FacturaApplicationService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Inicialización segura para evitar NG0904
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
+  }
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.cargarDatosDesdeBackend();
+    }
+  }
 
-    // 🔥 MOCK FACTURA
-    this.facturaData = {
-      numero: '001-180-000000001',
-      fechaEmision: new Date(),
-      emisor: {
-        nombre: 'APPDEUNA S.A.',
-        ruc: '17932061793206667001'
-      },
-      receptor: {
-        nombre: 'ALCIVAR MURILLO BETSY ESPERANZA'
+  async cargarDatosDesdeBackend() {
+    this.isLoading = true;
+    try {
+      const facturas = await this.facturaService.obtenerTodas();
+
+      if (facturas && facturas.length > 0) {
+        const f = facturas[0] as any;
+
+        this.facturaData = {
+          numero: f.noComprobante || f.numero || '---',
+          fechaEmision: f.fechaEmision,
+          estado: f.estadoComprobante || 'AUTORIZADO',
+          emisor: { nombre: f.emisor || 'No disponible', ruc: f.ruc || '---' },
+          receptor: { nombre: f.receptor || 'No disponible' },
+          pdfBase64: f.pdfBase64
+        };
+
+        if (this.facturaData.pdfBase64) {
+          const blobUrl = `data:application/pdf;base64,${this.facturaData.pdfBase64}`;
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        }
       }
-    };
-
-    // 📄 PDF desde public/
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      '/Semana-2-Pasantias.pdf'
-    );
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    } finally {
+      this.isLoading = false; 
+    }
   }
 
-  // =========================
-  // 🔍 ZOOM
-  // =========================
-  zoomIn() {
-    this.zoom += 0.1;
-  }
-
-  zoomOut() {
-    if (this.zoom > 0.5) this.zoom -= 0.1;
-  }
-
-  resetZoom() {
-    this.zoom = 1;
-  }
-
-  // =========================
-  // ⬇ DESCARGAS
-  // =========================
   descargarPDF() {
-    const link = document.createElement('a');
-    link.href = '/Semana-2-Pasantias.pdf';
-    link.download = 'factura.pdf';
-    link.click();
+    if (this.facturaData?.pdfBase64) {
+      const link = document.createElement('a');
+      link.href = `data:application/pdf;base64,${this.facturaData.pdfBase64}`;
+      link.download = `Factura-${this.facturaData.numero}.pdf`;
+      link.click();
+    }
   }
 
   descargarXML() {
-    // 🔥 MOCK XML
-    const xmlContent = `
-      <factura>
-        <numero>${this.facturaData.numero}</numero>
-        <emisor>${this.facturaData.emisor.nombre}</emisor>
-      </factura>
-    `;
-
+    const xmlContent = `<factura><numero>${this.facturaData?.numero}</numero></factura>`;
     const blob = new Blob([xmlContent], { type: 'application/xml' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'factura.xml';
+    link.download = `Factura-${this.facturaData?.numero}.xml`;
     link.click();
   }
 }

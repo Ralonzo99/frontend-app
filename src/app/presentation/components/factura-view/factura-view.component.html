@@ -1,132 +1,46 @@
 <div class="portal-wrapper">
-
   <header class="navbar-3d">
-
     <div class="header-content">
-
       <div class="brand">
-        <img src="/logo.png" alt="Intuito S.A.">
+        <img src="/logo.png" alt="Intuito S.A." width="150" height="50">
       </div>
-
-      <a href="https://www.facturasintuitosa.com/"
-         target="_blank"
-         class="btn-login-3d">
-        Iniciar Sesión
-      </a>
-
+      <a href="#" class="btn-login-3d">Iniciar Sesión</a>
     </div>
-
   </header>
 
   <main class="portal-main">
-
     <div class="contenedor-documento">
+      <div class="fila-unida border-b">
+        <div class="factura-titulo-container">
+          <h1 class="fuente-arial-black">Factura {{ facturaData.numero }}</h1>
+          <span class="autorizado-vivid" [class.status-loading]="isLoading">
+            {{ isLoading ? '⌛ Procesando' : '✔ ' + facturaData.estado }}
+          </span>
+        </div>
+      </div>
 
-      <ng-container *ngIf="facturaData; else cargando">
+      <div class="fila-unida border-b bg-gris-tenue fuente-datos">
+        <p><strong class="arial-bold">Emisor:</strong> {{ facturaData.emisor.nombre }}</p>
+        <p><strong class="arial-bold">Receptor:</strong> {{ facturaData.receptor.nombre }}</p>
+      </div>
 
-        <div class="fila-unida border-b header-row-left">
-          
-          <div class="factura-titulo-container">
-            <h1 class="fuente-arial-black">
-              Factura {{ facturaData.numero }}
-            </h1>
-
-            <span class="autorizado-vivid">
-              ✔ Autorizado
-            </span>
+      <div class="visor-container">
+        <div class="pdf-card">
+          <iframe [src]="pdfUrl" class="pdf-frame" [style.display]="isLoading ? 'none' : 'block'"></iframe>
+          <div *ngIf="isLoading" class="visor-loader-overlay">
+            <div class="spinner"></div>
+            <p class="arial-bold">Sincronizando Comprobante</p>
           </div>
-
         </div>
+      </div>
 
-        <div class="fila-unida border-b bg-gris-tenue fuente-datos">
-
-          <p>
-            <strong class="arial-bold">Emisor:</strong>
-            {{ facturaData.emisor.nombre }} |
-            <span class="arial-narrow">RUC: {{ facturaData.emisor.ruc }}</span>
-          </p>
-
-          <p>
-            <strong class="arial-bold">Receptor:</strong>
-            {{ facturaData.receptor.nombre }} |
-            Fecha: {{ facturaData.fechaEmision | date:'dd/MM/yyyy' }}
-          </p>
-
+      <div class="fila-unida banner-final-unido">
+        <div class="grupo-izquierdo">
+          <img src="/logo-inf.jfif" class="portal-logo framed" alt="logo">
+          <p class="portal-text arial-bold">Accede al historial de tus comprobantes</p>
         </div>
-
-        <div class="fila-unida">
-
-          <div class="botones-container">
-
-            <button class="btn-action">
-              <span class="icon-box pdf-icon">PDF</span>
-              Descargar PDF
-            </button>
-
-            <button class="btn-action">
-              <span class="icon-box xml-icon">XML</span>
-              Descargar XML
-            </button>
-
-          </div>
-
-        </div>
-
-        <div class="visor-container">
-
-          <div class="pdf-card">
-
-            <div class="pdf-toolbar">
-            </div>
-
-            <iframe
-              [src]="pdfUrl"
-              class="pdf-frame">
-            </iframe>
-
-          </div>
-
-        </div>
-
-        <div class="fila-unida banner-final-unido">
-
-          <div class="grupo-izquierdo">
-            
-            <div class="portal-left">
-              <img src="/logo-inf.jfif" class="portal-logo framed" alt="logo inferior">
-            </div>
-
-            <div class="portal-center">
-              <p class="portal-text arial-bold">
-                Accede al historial de tus comprobantes recibidos
-              </p>
-              <p class="portal-subtext">
-                <span class="check-verde-box">✔</span> En un clic filtrar y descargar PDF / XML cuando lo necesites
-              </p>
-            </div>
-
-          </div>
-
-          <div class="portal-right">
-            <a href="https://www.facturasintuitosa.com/"
-               target="_blank"
-               class="portal-btn">
-              Acceder al Portal
-            </a>
-          </div>
-
-        </div>
-
-      </ng-container>
-
-      <ng-template #cargando>
-        <div class="fila-unida">
-          <p>Cargando datos del comprobante...</p>
-        </div>
-      </ng-template>
-
+        <a href="#" class="portal-btn">Acceder al Portal</a>
+      </div>
     </div>
-
   </main>
-
 </div>

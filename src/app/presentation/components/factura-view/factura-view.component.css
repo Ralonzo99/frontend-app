@@ -1,272 +1,37 @@
-/* =========================
-   ESTILOS DE FUENTE ESPECÍFICOS (ARIAL)
-========================= */
+.arial-bold { font-family: Arial, sans-serif; font-weight: bold; }
+.fuente-arial-black { font-family: "Arial Black", sans-serif; font-weight: 900; }
+.arial-narrow { font-family: "Arial Narrow", sans-serif; }
 
-.arial-bold {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-}
+.portal-wrapper { width: 100%; height: 100vh; display: flex; flex-direction: column; background: #F4F7F9; }
+.navbar-3d { background: #fff; border-bottom: 1px solid #E0E4E8; padding: 10px 40px; }
+.header-content { display: flex; justify-content: space-between; align-items: center; }
+.btn-login-3d { background: #0061af; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 13px; }
 
-.fuente-arial-black {
-  font-family: "Arial Black", Arial, sans-serif;
-  font-weight: 900;
-}
+.portal-main { flex: 1; padding: 20px 40px; display: flex; justify-content: center; overflow: hidden; }
+.contenedor-documento { width: 100%; max-width: 1200px; background: #fff; border: 1px solid #E0E4E8; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
 
-.arial-narrow {
-  font-family: "Arial Narrow", Arial, sans-serif;
-  letter-spacing: -0.5px;
-}
+.fila-unida { padding: 15px 25px; border-bottom: 1px solid #E0E4E8; }
+.bg-gris-tenue { background: #F8F9FA; }
+.fuente-datos { font-size: 14px; color: #555; }
+.factura-titulo-container { display: flex; align-items: center; gap: 15px; }
+h1 { font-size: 18px; margin: 0; color: #333; }
 
-/* =========================
-   FULLSCREEN BASE
-========================= */
+.autorizado-vivid { background: #D4EDDA; color: #155724; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.status-loading { background: #E9ECEF; color: #6C757D; }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100vh;
-  background: #F4F7F9;
-  font-family: Arial, Helvetica, sans-serif; /* Arial Regular base */
-  overflow: hidden;
-}
+.botones-container { display: flex; gap: 12px; }
+.btn-action { border: 1px solid #E0E4E8; background: #fff; padding: 8px 16px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; cursor: pointer; }
+.btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.portal-wrapper {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+.visor-container { flex: 1; padding: 20px; background: #525659; display: flex; }
+.pdf-card { width: 100%; height: 100%; background: #fff; border-radius: 4px; overflow: hidden; position: relative; }
+.pdf-frame { width: 100%; height: 100%; border: none; }
 
-/* =========================
-   HEADER
-========================= */
+.visor-loader-overlay { position: absolute; inset: 0; background: #333; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #00b0ff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
-.navbar-3d {
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #E0E4E8;
-}
-
-.header-content {
-  width: 100%;
-  padding: 10px 40px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand img {
-  height: 35px;
-  width: auto;
-}
-
-.btn-login-3d {
-  background: #0061af;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-/* =========================
-   MAIN Y CONTENEDOR
-========================= */
-
-.portal-main {
-  width: 100%;
-  flex: 1;
-  padding: 20px 40px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-}
-
-.contenedor-documento {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border: 1px solid #E0E4E8;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.fila-unida {
-  padding: 15px 25px;
-  border-bottom: 1px solid #E0E4E8;
-}
-
-.border-b { border-bottom: 1px solid #E0E4E8; }
-
-.bg-gris-tenue {
-  background: #F8F9FA;
-  color: #555;
-}
-
-.fuente-datos {
-  font-size: 14px;
-}
-
-/* =========================
-   TITULO Y AUTORIZADO (JUNTOS)
-========================= */
-
-.header-row-left {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.factura-titulo-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-h1 {
-  font-size: 18px;
-  margin: 0;
-  color: #333;
-}
-
-.autorizado-vivid {
-  background: #D4EDDA;
-  color: #155724;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-/* =========================
-   BOTONES DE ACCION
-========================= */
-
-.botones-container {
-  display: flex;
-  gap: 12px;
-}
-
-.btn-action {
-  border: 1px solid #E0E4E8;
-  background: #fff;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-family: Arial, sans-serif;
-}
-
-.icon-box {
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: bold;
-  font-size: 10px;
-  margin-right: 10px;
-}
-
-.pdf-icon { background: #E74C3C; }
-.xml-icon { background: #F39C12; }
-
-/* =========================
-   VISOR PDF
-========================= */
-
-.visor-container {
-  flex: 1;
-  padding: 20px;
-  background: #525659;
-  display: flex;
-}
-
-.pdf-card {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.pdf-toolbar {
-  background: #F8F9FA;
-  padding: 10px 15px;
-  border-bottom: 1px solid #E0E4E8;
-  font-size: 12px;
-}
-
-.pdf-frame {
-  width: 100%;
-  flex: 1;
-  border: none;
-}
-
-/* =========================
-   BANNER FINAL (UNIDO IZQUIERDA)
-========================= */
-
-.banner-final-unido {
-  width: 100%;
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.grupo-izquierdo {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-}
-
-.portal-logo.framed {
-  width: 55px;
-  height: auto;
-  border: 1px solid #E0E4E8;
-  padding: 6px;
-  border-radius: 8px;
-  background: #fff;
-  display: block;
-}
-
-.portal-text {
-  font-size: 14px;
-  margin: 0;
-  color: #333;
-}
-
-.portal-subtext {
-  font-size: 12px;
-  color: #666;
-  margin-top: 5px;
-}
-
-.check-verde-box {
-  background: #28A745;
-  color: white;
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 11px;
-  margin-right: 6px;
-}
-
-.portal-btn {
-  background: #0061af;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: bold;
-  text-decoration: none;
-  white-space: nowrap;
-}
+.banner-final-unido { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; }
+.portal-logo.framed { width: 55px; border: 1px solid #E0E4E8; padding: 6px; border-radius: 8px; }
+.check-verde-box { background: #28A745; color: white; padding: 1px 5px; border-radius: 4px; margin-right: 6px; }
+.portal-btn { background: #0061af; color: white; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: bold; text-decoration: none; }
