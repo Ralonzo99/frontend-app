@@ -1,21 +1,18 @@
 import { Injectable, Inject } from '@angular/core';
-// Solo subimos 2 niveles: de services a application, y de application a domain
-import { Factura } from '../../domain/entities/factura.entity';
-import { FacturaRepositoryPort } from '../../domain/ports/factura-repository.port';
+import { PDF_GENERATOR_TOKEN } from '../../../app.config';
 import { PdfGeneratorPort } from '../../domain/ports/pdf-generator.port';
-@Injectable({ providedIn: 'root' })
-export class FacturaApplicationService {
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FacturaService {
   constructor(
-    @Inject('FacturaRepository') private facturaRepo: FacturaRepositoryPort,
-    @Inject('PdfGenerator') private pdfGenerator: PdfGeneratorPort
+    @Inject(PDF_GENERATOR_TOKEN) private pdfGenerator: PdfGeneratorPort
   ) {}
 
-  async generarYEnviarPDF(facturaId: string, elementoId: string): Promise<string> {
-    const factura = await this.facturaRepo.findById(facturaId);
-    if (!factura) throw new Error('Factura no encontrada');
+  async crearPdfDesdeVista(elementoId: string): Promise<string> {
+    // Ahora el Port ya reconoce este método
     const pdfBase64 = await this.pdfGenerator.generarPDFDesdeHTML(elementoId);
-    factura.estado = 'ENVIADO';
-    await this.facturaRepo.update(facturaId, factura);
     return pdfBase64;
   }
 }

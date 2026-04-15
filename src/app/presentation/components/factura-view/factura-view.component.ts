@@ -26,11 +26,11 @@ export class FacturaViewComponent implements OnInit {
       numero: '001-180-000000001',
       fechaEmision: new Date(),
       emisor: {
-        nombre: 'Mi Empresa S.A.',
-        ruc: '1793206667001'
+        nombre: 'APPDEUNA S.A.',
+        ruc: '17932061793206667001'
       },
       receptor: {
-        nombre: 'Cliente Demo'
+        nombre: 'ALCIVAR MURILLO BETSY ESPERANZA'
       }
     };
 
