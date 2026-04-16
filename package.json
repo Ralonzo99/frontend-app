@@ -1,14 +1,15 @@
 {
   "name": "frontend-app",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:frontend-app": "node dist/frontend-app/server/server.mjs"
-  },
+"scripts": {
+  "ng": "ng",
+  "start": "ng serve",
+  "dev": "ng serve --open & timeout 5 && start http://localhost:4200/?tokenRequest=04fdf87373593c5c9075da310a9a217d3754a00f255f517d473fec115c3da88b",
+  "build": "ng build",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "serve:ssr:frontend-app": "node dist/frontend-app/server/server.mjs"
+},
   "private": true,
   "packageManager": "npm@11.9.0",
   "dependencies": {
