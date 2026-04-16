@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden; /* Evita el doble scroll */
+  background-color: #f2f4f7 !important;
+}
+
+/* Esto asegura que el contenedor de Angular use todo el monitor */
+app-root {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}

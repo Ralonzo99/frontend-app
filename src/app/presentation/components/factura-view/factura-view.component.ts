@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'; // CORREGIDO: de @angular/core
-import { CommonModule, isPlatformBrowser } from '@angular/common'; // CORREGIDO: de @angular/common
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FacturaApplicationService } from '../../../core/application/services/factura-application.service';
 
@@ -11,77 +11,78 @@ import { FacturaApplicationService } from '../../../core/application/services/fa
   styleUrls: ['./factura-view.component.css']
 })
 export class FacturaViewComponent implements OnInit {
+  
+  fechaActual: Date = new Date(); // Captura la fecha real actual
+  pdfUrl!: SafeResourceUrl;
+  isLoading: boolean = true;
 
   facturaData: any = {
     numero: '---',
-    estado: 'Sincronizando',
-    emisor: { nombre: 'Cargando emisor...', ruc: '---' },
+    estado: 'PROCESANDO',
+    emisor: { nombre: 'Buscando emisor...', ruc: '0000000000001' },
     receptor: { nombre: 'Cargando receptor...' },
+    pdfBase64: null,
     fechaEmision: null
   };
-
-  pdfUrl: SafeResourceUrl;
-  isLoading: boolean = true;
 
   constructor(
     private sanitizer: DomSanitizer,
     private facturaService: FacturaApplicationService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // Inicialización segura para evitar NG0904
     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
   }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.cargarDatosDesdeBackend();
+      this.cargarDatos();
     }
   }
 
-  async cargarDatosDesdeBackend() {
-    this.isLoading = true;
+  async cargarDatos() {
     try {
-      const facturas = await this.facturaService.obtenerTodas();
-
-      if (facturas && facturas.length > 0) {
-        const f = facturas[0] as any;
-
+      const data = await this.facturaService.obtenerTodas();
+      if (data && data.length > 0) {
+        const f = data[0] as any;
         this.facturaData = {
           numero: f.noComprobante || f.numero || '---',
-          fechaEmision: f.fechaEmision,
-          estado: f.estadoComprobante || 'AUTORIZADO',
-          emisor: { nombre: f.emisor || 'No disponible', ruc: f.ruc || '---' },
-          receptor: { nombre: f.receptor || 'No disponible' },
-          pdfBase64: f.pdfBase64
+          estado: 'AUTORIZADO',
+          emisor: { nombre: f.emisor, ruc: f.ruc },
+          receptor: { nombre: f.receptor },
+          pdfBase64: f.pdfBase64,
+          fechaEmision: f.fechaEmision
         };
-
-        if (this.facturaData.pdfBase64) {
-          const blobUrl = `data:application/pdf;base64,${this.facturaData.pdfBase64}`;
-          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        if (f.pdfBase64) {
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`data:application/pdf;base64,${f.pdfBase64}`);
         }
       }
-    } catch (error) {
-      console.error('Error al obtener datos:', error);
+    } catch (e) {
+      console.error("Error al conectar con puerto 7001");
     } finally {
-      this.isLoading = false; 
+      this.isLoading = false;
     }
   }
 
   descargarPDF() {
-    if (this.facturaData?.pdfBase64) {
+    if (this.facturaData.pdfBase64) {
+      const byteCharacters = atob(this.facturaData.pdfBase64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      
       const link = document.createElement('a');
-      link.href = `data:application/pdf;base64,${this.facturaData.pdfBase64}`;
-      link.download = `Factura-${this.facturaData.numero}.pdf`;
+      link.href = url;
+      link.download = `Factura_${this.facturaData.numero}.pdf`;
       link.click();
+      window.URL.revokeObjectURL(url);
     }
   }
 
   descargarXML() {
-    const xmlContent = `<factura><numero>${this.facturaData?.numero}</numero></factura>`;
-    const blob = new Blob([xmlContent], { type: 'application/xml' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Factura-${this.facturaData?.numero}.xml`;
-    link.click();
+    alert("El archivo XML estará disponible cuando el SRI autorice el comprobante.");
   }
 }
