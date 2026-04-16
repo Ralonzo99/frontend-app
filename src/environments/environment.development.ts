@@ -1,5 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7001/api/v1',
-  apiKey: 'MDRmZGY4NzM3MzU5M2M1YzkwNzVkYTMxMGE5YTIxN2QzNzU0YTAwZjI1NWY1MTdkNDczZmVjMTE1YzNkYTg4Yg=='
+  // Ajustado: 'Comprobantes' con C mayúscula según el Swagger de tu compañero
+  apiUrl: 'https://p4hkhvmf-7132.use.devtunnels.ms/api/v1/Comprobantes',
+  loginUrl: 'http://localhost:4200/login',
+  portalUrl: 'http://localhost:4200/portal'
 };

@@ -1,51 +1,55 @@
 <div class="master-container">
-  
   <header class="main-navbar">
     <div class="nav-content">
-      <img src="/logo.png" alt="Intuito S.A." class="logo-img">
+      <img src="/logo.png" alt="Logo" class="logo-img">
       <button class="btn-login">Iniciar Sesión</button>
     </div>
   </header>
 
   <main class="viewport-body">
-    <div class="document-card">
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+    <div class="document-card" *ngIf="!isLoading">
       
       <div class="row-padding border-bottom">
         <div class="flex-gap">
           <h1 class="invoice-title">Factura {{ facturaData.numero }}</h1>
-          <span class="status-badge">✔ {{ facturaData.estado }}</span>
+          <span class="status-badge" *ngIf="facturaData.estado">✔ {{ facturaData.estado }}</span>
         </div>
       </div>
 
       <div class="row-padding data-gray-box">
-        <div class="data-layout">
-          <div class="data-column">
-            <p><strong>Emisor:</strong> {{ facturaData.emisor.nombre }} | <strong>RUC:</strong> {{ facturaData.emisor.ruc }}</p>
-            <p><strong>Receptor:</strong> {{ facturaData.receptor.nombre }}</p>
-            <p>
-              <strong>Fecha Emisión:</strong> {{ facturaData.fechaEmision | date:'dd/MM/yyyy' }} 
-              <span class="consulta-text">| Consulta: 16/04/2026 09:48</span>
-            </p>
-          </div>
+        <div class="data-column">
+          <p>
+            <strong>Emisor:</strong> {{ facturaData.emisor.nombre }} | 
+            <strong>RUC:</strong> {{ facturaData.emisor.ruc }} | 
+            <strong>Nombre Comercial:</strong> {{ facturaData.emisor.nombreComercial }}
+          </p>
+          <p>
+            <strong>Receptor:</strong> {{ facturaData.receptor.nombre }} | 
+            <strong>Correo:</strong> <span class="text-blue">{{ facturaData.receptor.correo }}</span> | 
+            <strong>Fecha Emisión:</strong> {{ facturaData.fechaEmision }}
+          </p>
         </div>
       </div>
 
       <div class="row-padding border-bottom">
         <div class="flex-gap">
           <button class="btn-modern" (click)="descargarPDF()">
-            <span class="icon-box red-bg">PDF</span> 
-            Descargar PDF 
+            <span class="icon-box red-bg">PDF</span> Descargar PDF 
           </button>
           <button class="btn-modern" (click)="descargarXML()">
-            <span class="icon-box orange-bg">XML</span> 
-            Descargar XML
+            <span class="icon-box orange-bg">XML</span> Descargar XML
           </button>
         </div>
       </div>
 
       <div class="pdf-viewer-area">
-        <div class="pdf-canvas" *ngIf="!isLoading; else loading">
-          <iframe [src]="pdfUrl" class="iframe-full"></iframe>
+        <div class="pdf-canvas">
+          <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full" frameborder="0"></iframe>
         </div>
       </div>
 
@@ -59,14 +63,6 @@
         </div>
         <button class="btn-login">Acceder al Portal</button>
       </footer>
-
     </div>
   </main>
 </div>
-
-<ng-template #loading>
-  <div class="loading-state">
-    <div class="spinner"></div>
-    <p>Cargando visor...</p>
-  </div>
-</ng-template>

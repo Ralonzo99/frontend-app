@@ -1,4 +1,6 @@
 export const environment = {
-  production: false,
-  apiUrl: 'https://p4hkhvmf-7132.use.devtunnels.ms/api/v1/comprobantes'
+  production: true,
+  apiUrl: 'https://api.tuempresa.com/api/v1/comprobantes',
+  loginUrl: 'https://www.facturasintuitosa.com/login',
+  portalUrl: 'https://www.facturasintuitosa.com/portal'
 };

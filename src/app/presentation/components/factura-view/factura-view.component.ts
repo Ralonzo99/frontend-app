@@ -1,9 +1,7 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router'; // Importante para leer la URL
-
-// Ruta corregida según tu estructura de carpetas
+import { ActivatedRoute } from '@angular/router';
 import { FacturaHttpAdapter } from '../../../infrastructure/adapters/factura-http.adapter';
 
 @Component({
@@ -20,32 +18,32 @@ export class FacturaViewComponent implements OnInit {
 
   facturaData: any = {
     numero: '---',
-    emisor: { nombre: 'Cargando...', ruc: '' },
-    receptor: { nombre: 'Cargando...' }
+    estado: '---',
+    emisor: { nombre: 'Cargando...', ruc: '---', nombreComercial: '---' },
+    receptor: { nombre: '---', correo: '---' },
+    fechaEmision: ''
   };
 
   constructor(
     private sanitizer: DomSanitizer,
-    private route: ActivatedRoute, // Inyectamos la ruta activa
+    private route: ActivatedRoute,
     private facturaAdapter: FacturaHttpAdapter,
+    private cdr: ChangeDetectorRef, // Inyectado para forzar el renderizado
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
   }
 
   ngOnInit(): void {
-    // Verificamos que estamos en el navegador para evitar errores en SSR
     if (isPlatformBrowser(this.platformId)) {
-      // CAPTURAMOS EL TOKEN DE LA URL
-      // Ejemplo: factura-view?tokenRequest=abc123...
       this.route.queryParams.subscribe(params => {
-        this.tokenActual = params['tokenRequest'];
-        
-        if (this.tokenActual) {
+        const token = params['tokenRequest'] || params['token'];
+        if (token) {
+          this.tokenActual = String(token);
           this.cargarData(this.tokenActual);
         } else {
-          console.error("No se encontró el tokenRequest en la URL");
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
     }
@@ -54,47 +52,65 @@ export class FacturaViewComponent implements OnInit {
   async cargarData(token: string) {
     try {
       this.isLoading = true;
+      this.cdr.detectChanges(); // Mostrar spinner
+      
       const payload = { tokenRequest: token };
 
-      // 1. Obtenemos los datos de la factura (JSON)
+      // 1. Obtener Info
       const info = await this.facturaAdapter.getInfoComprobante(payload);
+      
       if (info) {
-        this.facturaData = info;
+        // Mapeo creando una nueva referencia de objeto
+        this.facturaData = {
+          numero: info.noComprobante || '---',
+          estado: info.estadoComprobante || '---',
+          emisor: { 
+            nombre: info.emisor || '---', 
+            ruc: info.ruc || '---',
+            nombreComercial: info.razonSocial || info.emisor || '---' 
+          },
+          receptor: { 
+            nombre: info.receptor || '---',
+            correo: info.correo || '---'
+          },
+          fechaEmision: info.fechaEmision || ''
+        };
+        
+        // FORZAR RENDERIZADO DE DATOS
+        this.cdr.detectChanges();
       }
 
-      // 2. Obtenemos el archivo PDF (Blob)
+      // 2. Obtener PDF
       const pdfBlob = await this.facturaAdapter.getPDFComprobante(payload);
       if (pdfBlob && pdfBlob.size > 0) {
-        const url = URL.createObjectURL(pdfBlob);
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.cdr.detectChanges();
       }
-    } catch (e) {
-      console.error("Error al conectar con el servidor", e);
+
+    } catch (e: any) {
+      console.error("Error en la carga:", e);
+      this.facturaData.emisor.nombre = 'Error al conectar con el servidor';
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges(); // Ocultar spinner y mostrar card final
     }
   }
-
-  // --- MÉTODOS PARA LOS BOTONES DEL HTML ---
 
   async descargarPDF() {
     if (!this.tokenActual) return;
     try {
       const blob = await this.facturaAdapter.getPDFComprobante({ tokenRequest: this.tokenActual });
-      this.descargarArchivo(blob, `Factura_${this.facturaData.numero || 'comprobante'}.pdf`);
-    } catch (error) {
-      console.error("Error descargando PDF", error);
-    }
+      this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.pdf`);
+    } catch (err) { console.error(err); }
   }
 
   async descargarXML() {
     if (!this.tokenActual) return;
     try {
       const blob = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
-      this.descargarArchivo(blob, `Factura_${this.facturaData.numero || 'comprobante'}.xml`);
-    } catch (error) {
-      console.error("Error descargando XML", error);
-    }
+      this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.xml`);
+    } catch (err) { console.error(err); }
   }
 
   private descargarArchivo(blob: Blob, nombre: string) {
@@ -102,7 +118,9 @@ export class FacturaViewComponent implements OnInit {
     const a = document.createElement('a');
     a.href = url;
     a.download = nombre;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }
 }
