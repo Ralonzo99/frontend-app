@@ -1,83 +1,106 @@
 <div class="master-container">
+
   <header class="main-navbar">
     <div class="nav-content">
-      <img src="/logo.png" 
-           alt="Logo" 
-           class="logo-img" 
-           id="main-logo-top" 
-           width="180" 
-           height="60">
-      <button class="btn-login" name="btn-login-header">Iniciar Sesión</button>
+      <img src="/logo.png" alt="Logo" class="logo-img" width="180" height="60">
+      <button class="btn-login" type="button">
+        Iniciar Sesión
+      </button>
     </div>
   </header>
 
   <main class="viewport-body">
+
     <div *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Procesando documento...</p>
     </div>
 
     <div class="document-card" *ngIf="!isLoading">
+
+      <!-- HEADER -->
       <div class="row-padding border-bottom">
         <div class="flex-gap">
-          <h1 class="invoice-title">Factura {{ facturaData.numero }}</h1>
-          <span class="status-badge" id="txt-status">✔ {{ facturaData.estado }}</span>
+          <h1 class="invoice-title">
+            Factura {{ facturaData?.numero }}
+          </h1>
+          <span class="status-badge">
+            ● {{ facturaData?.estado }}
+          </span>
         </div>
       </div>
 
-      <div class="row-padding data-gray-box">
+      <!-- DATOS -->
+      <div class="data-gray-box">
         <div class="data-column">
           <p>
-            <strong>Emisor:</strong> {{ facturaData.emisor.nombre }} | 
-            <strong>RUC:</strong> {{ facturaData.emisor.ruc }} | 
-            <strong>Nombre Comercial:</strong> {{ facturaData.emisor.nombreComercial }}
+            <span class="label">Emisor:</span>
+            <span class="bold-value">{{ facturaData?.emisor?.nombre }}</span>
+            <span class="separator">|</span>
+            <span class="label">RUC:</span>
+            <span class="data-value">{{ facturaData?.emisor?.ruc }}</span>
+            <span class="separator">|</span>
+            <span class="label">Nombre Comercial:</span>
+            <span class="data-value">{{ facturaData?.emisor?.nombreComercial }}</span>
           </p>
           <p>
-            <strong>Receptor:</strong> {{ facturaData.receptor.nombre }} | 
-            <strong>Correo:</strong> <span class="text-blue">{{ facturaData.receptor.correo }}</span> | 
-            <strong>Fecha Emisión:</strong> {{ facturaData.fechaEmision }}
+            <span class="label">Receptor:</span>
+            <span class="bold-value">{{ facturaData?.receptor?.nombre }}</span>
+            <span class="separator">|</span>
+            <span class="label">Correo:</span>
+            <span class="data-value text-blue">{{ facturaData?.receptor?.correo }}</span>
+            <span class="separator">|</span>
+            <span class="label">Fecha Emisión:</span>
+            <span class="data-value">{{ facturaData?.fechaEmision }}</span>
           </p>
         </div>
       </div>
 
-      <div class="row-padding border-bottom">
+      <!-- BOTONES -->
+      <div class="row-padding buttons-row">
         <div class="flex-gap">
-          <button name="btn-pdf" class="btn-modern" (click)="descargarPDF()">
-            <span class="icon-box red-bg">PDF</span> Descargar PDF 
+
+          <button class="btn-modern" (click)="descargarPDF()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32">
+              <path fill="#909090" d="m24.1 2.072l5.564 5.8v22.056H8.879V30h20.856V7.945z"/>
+              <path fill="#f4f4f4" d="M24.031 2H8.808v27.928h20.856V7.873z"/>
+              <path fill="#7a7b7c" d="M8.655 3.5h-6.39v6.827h20.1V3.5z"/>
+              <path fill="#dd2025" d="M22.472 10.211H2.395V3.379h20.077z"/>
+            </svg>
+            Descargar PDF (RIDE)
           </button>
-          <button name="btn-xml" class="btn-modern" (click)="descargarXML()">
-            <span class="icon-box orange-bg">XML</span> Descargar XML
+
+          <button class="btn-modern" (click)="descargarXML()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="#ffa726" d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2"/>
+              <path fill="#ffa726" d="M9 14l-2.33-2.33l-1.42 1.41L7.58 15l-2.33 2.33l1.42 1.41L9 16z"/>
+              <path fill="#ffa726" d="M15 14l2.33-2.33l1.42 1.41L16.42 15l2.33 2.33l-1.42 1.41L15 16z"/>
+            </svg>
+            Descargar XML
           </button>
+
         </div>
       </div>
 
+      <!-- PDF VIEWER -->
       <div class="pdf-viewer-area">
-        <div class="pdf-canvas" id="pdf-view-box" style="height: 600px; min-height: 500px; background: #525659;">
-          <iframe 
-            *ngIf="pdfUrl" 
-            [src]="pdfUrl" 
-            id="pdf-frame"
-            name="invoice-frame"
-            class="iframe-full" 
-            style="width: 100%; height: 100%; border: none;"
-            type="application/pdf">
-          </iframe>
-          <div *ngIf="!pdfUrl" class="no-pdf">
-            <p style="color: white; padding: 20px; text-align: center;">Generando vista previa...</p>
-          </div>
-        </div>
+        <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full"></iframe>
       </div>
 
+      <!-- FOOTER -->
       <footer class="card-footer">
         <div class="footer-left-content">
-          <img src="/logo-inf.jfif" alt="Logo" class="footer-logo" width="40" height="40">
+          <img src="/logo-inf.jfif" class="footer-logo">
           <div class="footer-copy">
             <h3>Accede al historial de tus comprobantes recibidos</h3>
-            <p class="text-black">✅ En un clic filtrar y descargar PDF / XML cuando lo necesites</p>
+            <p>✅ En un clic filtrar y descargar PDF / XML cuando lo necesites</p>
           </div>
         </div>
-        <button class="btn-login" name="btn-access-portal">Acceder al Portal</button>
+        <button class="btn-login">
+          Acceder al Portal
+        </button>
       </footer>
+
     </div>
   </main>
 </div>
