@@ -12,7 +12,7 @@ import { FacturaHttpAdapter } from '../../../infrastructure/adapters/factura-htt
   styleUrls: ['./factura-view.component.css']
 })
 export class FacturaViewComponent implements OnInit {
-  pdfUrl!: SafeResourceUrl;
+  pdfUrl: SafeResourceUrl | null = null;
   isLoading: boolean = true;
   tokenActual: string = '';
 
@@ -28,11 +28,9 @@ export class FacturaViewComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private facturaAdapter: FacturaHttpAdapter,
-    private cdr: ChangeDetectorRef, // Inyectado para forzar el renderizado
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
-  }
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -52,15 +50,11 @@ export class FacturaViewComponent implements OnInit {
   async cargarData(token: string) {
     try {
       this.isLoading = true;
-      this.cdr.detectChanges(); // Mostrar spinner
-      
-      const payload = { tokenRequest: token };
+      this.cdr.detectChanges();
 
-      // 1. Obtener Info
-      const info = await this.facturaAdapter.getInfoComprobante(payload);
-      
+      // 1. Datos de la factura
+      const info = await this.facturaAdapter.getInfoComprobante({ tokenRequest: token });
       if (info) {
-        // Mapeo creando una nueva referencia de objeto
         this.facturaData = {
           numero: info.noComprobante || '---',
           estado: info.estadoComprobante || '---',
@@ -69,46 +63,54 @@ export class FacturaViewComponent implements OnInit {
             ruc: info.ruc || '---',
             nombreComercial: info.razonSocial || info.emisor || '---' 
           },
-          receptor: { 
-            nombre: info.receptor || '---',
-            correo: info.correo || '---'
-          },
+          receptor: { nombre: info.receptor || '---', correo: info.correo || '' },
           fechaEmision: info.fechaEmision || ''
         };
-        
-        // FORZAR RENDERIZADO DE DATOS
         this.cdr.detectChanges();
       }
 
-      // 2. Obtener PDF
-      const pdfBlob = await this.facturaAdapter.getPDFComprobante(payload);
-      if (pdfBlob && pdfBlob.size > 0) {
-        const blobUrl = URL.createObjectURL(pdfBlob);
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      // 2. Visualización del PDF (El backend envía Base64 directo)
+      const base64Content = await this.facturaAdapter.getPDFComprobante({ tokenRequest: token });
+      
+      if (base64Content) {
+        // Quitamos comillas si el backend las envía en el string
+        const cleanBase64 = base64Content.replace(/['"]+/g, '');
+        const dataUrl = `data:application/pdf;base64,${cleanBase64}`;
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dataUrl);
         this.cdr.detectChanges();
       }
 
-    } catch (e: any) {
-      console.error("Error en la carga:", e);
-      this.facturaData.emisor.nombre = 'Error al conectar con el servidor';
+    } catch (e) {
+      console.error("Error al cargar factura:", e);
     } finally {
       this.isLoading = false;
-      this.cdr.detectChanges(); // Ocultar spinner y mostrar card final
+      this.cdr.detectChanges();
     }
   }
 
   async descargarPDF() {
-    if (!this.tokenActual) return;
     try {
-      const blob = await this.facturaAdapter.getPDFComprobante({ tokenRequest: this.tokenActual });
+      const base64 = await this.facturaAdapter.getPDFComprobante({ tokenRequest: this.tokenActual });
+      const cleanBase64 = base64.replace(/['"]+/g, '');
+      
+      // Convertir Base64 a Blob para descarga física
+      const byteCharacters = atob(cleanBase64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      
       this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.pdf`);
     } catch (err) { console.error(err); }
   }
 
   async descargarXML() {
-    if (!this.tokenActual) return;
     try {
-      const blob = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
+      const xmlData = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
+      const cleanXml = xmlData.replace(/['"]+/g, '');
+      const blob = new Blob([cleanXml], { type: 'application/xml' });
       this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.xml`);
     } catch (err) { console.error(err); }
   }
