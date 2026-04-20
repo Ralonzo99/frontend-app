@@ -72,7 +72,8 @@ export class FacturaViewComponent implements OnInit {
 
       this.facturaData = {
         numero: info.noComprobante || '---',
-        estado: info.estadoComprobante || '',
+        // MEJORA: Se eliminan guiones bajos para la vista
+        estado: (info.estadoComprobante || '').replace(/_/g, ' '),
         emisor: {
           nombre: info.emisor || '---',
           ruc: info.ruc || '---',
@@ -103,17 +104,19 @@ export class FacturaViewComponent implements OnInit {
   }
 
   getEstadoClass(estado: string): string {
-    const e = estado?.toUpperCase().trim() || '';
+    // Normalización para comparación sin guiones
+    const e = estado?.toUpperCase().replace(/_/g, ' ').trim() || '';
+    
     if (['AUTORIZADO', 'REGISTRADO'].includes(e)) return 'status-exito';
     if (['ANULADO'].includes(e)) return 'status-preventivo';
-    if (['ERROR', 'NO_AUTORIZADO', 'NO_ENCONTRADO', 'ERROR_AL_FIRMAR'].includes(e)) return 'status-error';
+    if (['ERROR', 'NO AUTORIZADO', 'NO ENCONTRADO', 'ERROR AL FIRMAR'].includes(e)) return 'status-error';
     if (['GENERADO', 'FIRMADO', 'DEVUELTO', 'PROCESANDO', 'RECIBIDO'].includes(e)) return 'status-informativo';
+    
     return 'status-informativo';
   }
 
   private cleanBase64(data: any): string {
     let str = String(data || '').trim();
-    // Eliminar posibles comillas dobles si vienen del JSON
     if (str.startsWith('"') && str.endsWith('"')) {
       str = str.substring(1, str.length - 1);
     }
@@ -142,9 +145,7 @@ export class FacturaViewComponent implements OnInit {
   async descargarXML() {
     try {
       let xmlBase64 = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
-      // Limpiamos el base64 de posibles escapes o comillas del backend
       const cleanXmlBase64 = this.cleanBase64(xmlBase64);
-      // Decodificamos el Base64 a un Blob XML
       const blob = this.base64ToBlob(cleanXmlBase64, 'application/xml');
       this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.xml`);
     } catch (e) {
@@ -162,4 +163,4 @@ export class FacturaViewComponent implements OnInit {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
-}  
+}
