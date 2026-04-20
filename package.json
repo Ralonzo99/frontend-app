@@ -4,7 +4,7 @@
  "scripts": {
   "ng": "ng",
   "start": "ng serve",
-  "dev": "start \"\" \"http://localhost:4200/?tokenRequest=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGF2ZUFjY2VzbyI6IjI1MTEyMDI1MDcxNzkzMjA2NjY3MDAxMTAwMTAwMTAwMDAxNTM1MzAwMDAwMDAwMTUiLCJpYXQiOjE3NzY0NDc4NDgsImV4cCI6MTc3NjQ2MDgwMH0.L8Dr98pqJtGHWgzevkNALYxkOpGh4uB-T1Y6rfZlQIM\" & ng serve",
+  "dev": "start \"\" \"http://localhost:4200/?tokenRequest=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGF2ZUFjY2VzbyI6IjE3MTIyMDI1MDExNzkzMjA2NjY3MDAxMTAwMTAwMTAwMDAyNzE2MDAwMDAwMDAwMTMiLCJpYXQiOjE3NzY2Nzg2NjAsImV4cCI6MTc3NjcyNjAwMH0._VZKtjRt6Dc5P42LWuU6RlGVk0XCG_VtcHz3_-vsf0s\" & ng serve",
   "build": "ng build",
   "watch": "ng build --watch --configuration development",
   "test": "ng test"
