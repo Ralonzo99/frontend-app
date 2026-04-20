@@ -90,8 +90,8 @@ export class FacturaViewComponent implements OnInit {
         const clean = this.cleanBase64(pdf);
         const blob = this.base64ToBlob(clean, 'application/pdf');
         const url = URL.createObjectURL(blob);
-        const viewerUrl = `${url}#toolbar=1&navpanes=0&scrollbar=1`;
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+        // Quitamos parámetros de toolbar para evitar que Opera lo bloquee como "anuncio"
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       }
     } catch (error) {
       console.error("Error al cargar comprobante:", error);
@@ -113,7 +113,6 @@ export class FacturaViewComponent implements OnInit {
 
   private cleanBase64(data: any): string {
     let str = String(data || '').trim();
-    // Eliminar posibles comillas dobles si vienen del JSON
     if (str.startsWith('"') && str.endsWith('"')) {
       str = str.substring(1, str.length - 1);
     }
@@ -142,9 +141,7 @@ export class FacturaViewComponent implements OnInit {
   async descargarXML() {
     try {
       let xmlBase64 = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
-      // Limpiamos el base64 de posibles escapes o comillas del backend
       const cleanXmlBase64 = this.cleanBase64(xmlBase64);
-      // Decodificamos el Base64 a un Blob XML
       const blob = this.base64ToBlob(cleanXmlBase64, 'application/xml');
       this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.xml`);
     } catch (e) {
