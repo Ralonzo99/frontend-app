@@ -8,16 +8,17 @@
   </header>
 
   <main class="viewport-body">
-    <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
-      <p>Cargando factura...</p>
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Procesando documento...</p>
     </div>
 
-    <div *ngIf="!isLoading && errorMessage" style="text-align: center; padding: 40px;">
+    <div *ngIf="!isLoading && errorMessage" class="error-container">
       <div class="error-card">
         <div class="error-icon-wrapper">⚠️</div>
         <h2>Acceso Denegado</h2>
         <p>{{ errorMessage }}</p>
-        <button class="btn-modern" (click)="cargarData(tokenActual)" style="margin-top: 15px;">Reintentar carga</button>
+        <button class="btn-modern" (click)="cargarData(tokenActual)">Reintentar carga</button>
       </div>
     </div>
 
@@ -72,12 +73,12 @@
       </div>
 
       <div class="pdf-viewer-area">
-        <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full" type="application/pdf"></iframe>
+        <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full"></iframe>
       </div>
 
       <footer class="card-footer">
         <div class="footer-left-content">
-          <img src="/logo-inf-removebg-preview.png" class="footer-logo" width="40">
+          <img src="/logo-inf-removebg-preview.png" class="footer-logo" alt="Icono historial">
           <div class="footer-copy">
             <h3>Acceso al historial de tus comprobantes recibidos</h3>
             <p>✅ En un click filtra y descarga PDF y XML cuando los necesites</p>
@@ -87,4 +88,4 @@
       </footer>
     </div>
   </main>
-</div>
+</div>s esos son mis codigos actuales solo adapta lo que te pedi y no cambies nada

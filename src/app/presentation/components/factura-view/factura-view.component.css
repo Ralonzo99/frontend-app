@@ -1,18 +1,10 @@
-/* --- 1. RESET Y BLOQUEO DE PANTALLA PC --- */
+/* --- RESET Y ESTRUCTURA FULLSCREEN --- */
 * { 
   box-sizing: border-box; 
   margin: 0; 
   padding: 0; 
 }
 
-/* En PC el scroll desaparece por completo */
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden; 
-}
-
-/* Contenedor fijo a los bordes de la pantalla */
 .master-container {
   position: fixed; 
   inset: 0; 
@@ -23,7 +15,7 @@ html, body {
   overflow: hidden; 
 }
 
-/* --- 2. NAVEGACIÓN (PC & MÓVIL) --- */
+/* --- BARRA DE NAVEGACIÓN --- */
 .main-navbar { 
   background: #fff; 
   border-bottom: 1px solid #E5E7EB; 
@@ -33,31 +25,34 @@ html, body {
 .nav-content { display: flex; justify-content: space-between; align-items: center; }
 .logo-img { height: 48px; width: auto; }
 
+/* --- BOTONES AZULES (IGUALADOS) --- */
 .btn-primary-blue {
   background: #1D4ED8;
   color: #fff;
   border: none;
-  width: 180px;      
-  height: 42px;      
+  width: 180px;      /* Ancho igualado */
+  height: 42px;      /* Altura igualada */
   border-radius: 8px;
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
+.btn-primary-blue:hover { background: #1e40af; }
 
-/* --- 3. CUERPO PC (VISOR AJUSTABLE AL ALTO) --- */
+/* --- CUERPO DEL VISOR --- */
 .viewport-body { 
   flex: 1; 
   padding: 24px 40px; 
+  overflow-y: auto; 
   background: #fff; 
+  min-height: 0; 
   display: flex;
   flex-direction: column;
-  overflow: hidden; 
-  min-height: 0;
 }
 
 .document-card {
@@ -66,13 +61,13 @@ html, body {
   border-radius: 12px;
   display: flex; 
   flex-direction: column; 
-  height: 100%; /* La tarjeta se estira hasta el final en PC */
-  width: 100%;
+  overflow: hidden; 
+  height: 100%; 
   min-height: 0;
-  overflow: hidden;
+  width: 100%;
 }
 
-/* --- 4. CABECERA Y DATOS --- */
+/* --- CABECERA Y DATOS --- */
 .row-padding { padding: 16px 24px; flex-shrink: 0; }
 .border-bottom { border-bottom: 1px solid #E5E7EB; }
 .flex-gap { display: flex; align-items: center; gap: 12px; }
@@ -88,25 +83,35 @@ html, body {
   flex-shrink: 0;
 }
 .data-column p { font-size: 13.5px; color: #374151; line-height: 2; }
-.bold-value { font-weight: 700; color: #111827; }
-.separator { color: #D1D5DB; margin: 0 8px; }
+.bold-value { font-weight: 700; color: #111827; font-size: 13.5px; }
+.data-value { color: #374151; font-size: 13.5px; }
 .text-blue { color: #1D4ED8; }
+.separator { color: #D1D5DB; margin: 0 8px; font-weight: 300; }
 
+/* --- BOTONES MODERNOS (GRISES) --- */
 .btn-modern {
   display: inline-flex; 
   align-items: center; 
   gap: 8px; 
-  background: #fff; border: 1px solid #E5E7EB;
-  padding: 9px 16px; border-radius: 8px; 
-  font-size: 13px; font-weight: 600; color: #374151; cursor: pointer;
+  background: #fff; 
+  border: 1px solid #E5E7EB;
+  padding: 9px 16px; 
+  border-radius: 8px; 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: #374151;
+  cursor: pointer; 
+  transition: all 0.15s;
 }
+.btn-modern:hover { border-color: #1D4ED8; color: #1D4ED8; background: #F9FAFB; }
 
-/* --- 5. ÁREA DEL PDF --- */
+/* --- VISOR PDF --- */
 .pdf-viewer-area { 
   flex: 1; 
   padding: 16px 24px; 
   display: flex; 
   min-height: 0; 
+  background: transparent; 
 }
 .iframe-full { 
   width: 100%; 
@@ -114,9 +119,10 @@ html, body {
   border: 1px solid #E5E7EB; 
   border-radius: 10px; 
   background: #F9FAFB; 
+  display: block;
 }
 
-/* --- 6. FOOTER --- */
+/* --- FOOTER --- */
 .card-footer { 
   display: flex; 
   justify-content: space-between; 
@@ -126,77 +132,49 @@ html, body {
   flex-shrink: 0; 
 }
 .footer-left-content { display: flex; align-items: center; gap: 14px; }
-.footer-copy h3 { font-size: 14px; font-weight: 700; color: #111827; }
+.footer-logo { width: 48px; height: 48px; object-fit: contain; border-radius: 8px; }
+.footer-copy h3 { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 2px; }
 .footer-copy p { font-size: 13px; color: #374151; }
 
-/* --- 7. ESTADOS (BADGES) --- */
-.status-badge { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; }
+/* --- ESTADOS --- */
+.status-badge { 
+  display: inline-flex; 
+  align-items: center; 
+  font-size: 12px; 
+  font-weight: 700; 
+  padding: 4px 12px; 
+  border-radius: 999px; 
+  text-transform: uppercase;
+}
+
 .status-exito { background-color: #D1FAE5 !important; color: #059669 !important; }
 .status-preventivo { background-color: #FEF3C7 !important; color: #F59E0B !important; }
 .status-error { background-color: #FEE2E2 !important; color: #B91C1C !important; }
 .status-informativo { background-color: #DBEAFE !important; color: #1D4ED8 !important; }
 
-/* --- 8. MODO OSCURO --- */
+/* --- MODO OSCURO --- */
 .dark-theme { background: #111827 !important; }
-.dark-theme .main-navbar, .dark-theme .document-card, .dark-theme .card-footer, 
-.dark-theme .data-gray-box, .dark-theme .viewport-body {
+.dark-theme .main-navbar, 
+.dark-theme .document-card, 
+.dark-theme .card-footer, 
+.dark-theme .data-gray-box, 
+.dark-theme .viewport-body, 
+.dark-theme .pdf-viewer-area {
   background: #1f2937 !important; 
   border-color: #374151 !important; 
   color: #f3f4f6 !important;
 }
 .dark-theme .invoice-title, .dark-theme .bold-value { color: #ffffff !important; }
 .dark-theme .btn-modern { background: #374151; color: #fff; border-color: #4b5563; }
+.dark-theme .iframe-full { background: #111827; border-color: #374151; }
 
-/* --- 9. AJUSTES MÓVIL (Y HORIZONTAL) --- */
-/* Se activa si el ancho es pequeño (< 640px) O si el alto es pequeño (< 600px) */
-@media (max-width: 640px), (max-height: 600px) {
-  
-  /* Habilitamos scroll solo para esta condición */
-  html, body { 
-    overflow-y: auto !important; 
-    height: auto !important; 
-  }
-  
-  .master-container { 
-    position: relative !important; 
-    height: auto !important; 
-    min-height: 100vh; 
-    overflow: visible !important; 
-  }
-  
-  .viewport-body { 
-    padding: 12px 16px; 
-    overflow: visible !important; 
-    height: auto !important;
-    flex: none; 
-  }
-
-  .document-card { 
-    height: auto !important; 
-    min-height: min-content; 
-    margin-bottom: 20px; 
-    overflow: visible !important;
-  }
-
+/* --- MÓVIL --- */
+@media (max-width: 640px) {
+  .viewport-body { padding: 12px 16px; }
+  .document-card { height: auto; min-height: min-content; margin-bottom: 20px; }
   .header-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-  
-  .buttons-container { 
-    flex-direction: column; 
-    align-items: stretch; 
-    width: 100%; 
-  }
-  
-  .buttons-container .btn-modern { width: 100%; justify-content: center; }
+  .card-footer { flex-direction: column; gap: 16px; text-align: center; }
+  .pdf-viewer-area { min-height: 450px; height: 500px; flex: none; padding: 12px 16px; }
 
-  .pdf-viewer-area { 
-    height: 500px; /* En móvil le damos altura fija para que el scroll funcione fuera */
-    flex: none; 
-    padding: 12px; 
-  }
 
-  .card-footer { 
-    flex-direction: column; 
-    gap: 16px; 
-    text-align: center; 
-  }
-}
+}  
