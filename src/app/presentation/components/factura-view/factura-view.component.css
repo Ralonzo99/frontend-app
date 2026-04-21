@@ -3,215 +3,63 @@
 .master-container {
   position: fixed; inset: 0; display: flex; flex-direction: column;
   background: #fff; color: #374151;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden; transition: background 0.2s, color 0.2s; /* NUEVO: transición suave */
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-/* ── Navbar ── */
-.main-navbar { background: #fff; border-bottom: 1px solid #E5E7EB; padding: 12px 32px; flex-shrink: 0; }
-.nav-content { display: flex; justify-content: space-between; align-items: center; }
-.logo-img { height: 48px; width: auto; }
+/* ── Navbar Corregido ── */
+.main-navbar { border-bottom: 1px solid #E5E7EB; padding: 0 32px; height: 70px; display: flex; align-items: center; background: #fff; flex-shrink: 0; }
+.nav-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+.logo-img { height: 48px; width: auto; display: block; }
 
-/* ── Botones ── */
-.btn-primary-blue {
-  background: #1D4ED8; color: #fff; border: none;
-  width: 180px; height: 42px; border-radius: 8px;
-  font-size: 13.5px; font-weight: 600; cursor: pointer; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s; /* NUEVO: transform + shadow */
-}
-.btn-primary-blue:hover { background: #1e40af; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(29,78,216,0.3); }
-.btn-primary-blue:active { transform: none; box-shadow: none; }
-
-.btn-modern {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: #fff; border: 1px solid #E5E7EB;
-  padding: 9px 16px; border-radius: 8px;
-  font-size: 13px; font-weight: 600; color: #374151;
-  cursor: pointer; transition: all 0.18s ease;
-}
-.btn-modern:hover { border-color: #1D4ED8; color: #1D4ED8; background: #EFF6FF; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(29,78,216,0.12); }
-.btn-modern:active { transform: none; box-shadow: none; }
-/* NUEVO: sombras de color específicas por tipo de botón */
-.btn-pdf:hover { box-shadow: 0 4px 12px rgba(221,32,37,0.15); }
-.btn-xml:hover { box-shadow: 0 4px 12px rgba(249,115,22,0.15); }
-/* NUEVO: flecha animada en hover */
-.btn-arrow { opacity: 0; transform: translateY(2px); transition: opacity 0.18s, transform 0.18s; flex-shrink: 0; }
-.btn-modern:hover .btn-arrow { opacity: 1; transform: translateY(0); }
-
-/* ── Layout ── */
-.viewport-body { flex: 1; padding: 24px 40px; overflow-y: auto; background: #fff; min-height: 0; display: flex; flex-direction: column; }
-.document-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; height: 100%; min-height: 0; width: 100%; }
-.row-padding { padding: 16px 24px; flex-shrink: 0; }
+.viewport-body { flex: 1; padding: 20px 40px; overflow-y: auto; background: #fff; display: flex; flex-direction: column; }
+.document-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; display: flex; flex-direction: column; height: 100%; width: 100%; }
+.row-padding { padding: 14px 24px; flex-shrink: 0; }
 .border-bottom { border-bottom: 1px solid #E5E7EB; }
 .flex-gap { display: flex; align-items: center; gap: 12px; }
-.buttons-container { display: flex; align-items: center; gap: 10px; }
 
-/* ── Título ── */
-/* NUEVO: tipo de comprobante como label separado */
-.title-group { display: flex; align-items: baseline; }
-.tipo-label { font-size: 13.5px; font-weight: 600; color: #6B7280; margin-right: 6px; }
-.invoice-title { font-size: 20px; font-weight: 700; color: #111827; letter-spacing: -0.3px; display: flex; align-items: baseline; gap: 4px; }
-
-/* ── Datos ── */
-/* NUEVO: layout de chips en lugar de párrafos con estilos inline */
-.data-gray-box { background: #F9FAFB; border-bottom: 1px solid #E5E7EB; padding: 12px 24px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
-.data-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 13px; line-height: 1.8; }
-.data-label { font-weight: 600; color: #6B7280; font-size: 12.5px; }
-/* CAMBIO APLICADO: .label-bold agregado */
-.data-label.label-bold { font-weight: 700; color: #111827; font-size: 13px; }
-.data-val { color: #374151; font-size: 13px; min-width: 80px; display: inline-block; }
-/* ELIMINADO: .data-val.bold ya no se usa */
-.data-val.accent { color: #1D4ED8; }
-.data-sep { color: #D1D5DB; margin: 0 6px; }
-/* NUEVO: mantiene espacio en campos vacíos sin mostrar guiones */
-.data-val:empty::before { content: '\00a0'; white-space: pre; }
+/* ── Título con Negrita Corregida ── */
+.invoice-title { font-size: 18px; color: #111827; display: flex; align-items: center; gap: 8px; margin: 0; }
+.tipo-txt { font-weight: 800; }
+.numero-txt { font-weight: 700 !important; color: #374151; font-size: 17px; } /* Negrita reforzada */
 
 /* ── Badges ── */
-.status-badge { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.4px; }
-.status-exito      { background: #D1FAE5; color: #065F46; }
-.status-preventivo { background: #FEF3C7; color: #92400E; }
-.status-error      { background: #FEE2E2; color: #991B1B; }
-.status-informativo{ background: #DBEAFE; color: #1E40AF; }
+.status-badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; }
+.status-exito      { background-color: #D1FAE5 !important; color: #065F46 !important; }
+.status-error      { background-color: #FEE2E2 !important; color: #991B1B !important; }
 
-/* ── Alerta PDF ── */
-/* NUEVO */
-.pdf-alerta { display: flex; align-items: center; gap: 10px; margin: 12px 24px 0; padding: 10px 14px; background: #FEF9C3; border: 1px solid #FDE047; border-radius: 8px; color: #713F12; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+/* ── Datos ── */
+.data-main-box { background: #fff; border-bottom: 1px solid #E5E7EB; padding: 12px 24px; }
+.data-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 13px; line-height: 1.6; }
+.label-bold { font-weight: 700 !important; color: #111827 !important; }
+.data-sep { color: #D1D5DB; margin: 0 6px; }
 
-/* ── Visor PDF ── */
-.pdf-viewer-area { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; min-height: 0; }
-.iframe-full { width: 100%; height: 100%; border: 1px solid #E5E7EB; border-radius: 10px; background: #F9FAFB; display: block; }
-/* NUEVO: placeholder con estado normal y de error */
-.pdf-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #9CA3AF; border: 2px dashed #E5E7EB; border-radius: 10px; width: 100%; }
-.pdf-placeholder svg { opacity: 0.4; }
-.pdf-placeholder p { font-size: 14px; font-weight: 500; }
-.pdf-placeholder--error { border-color: #FECACA; color: #991B1B; }
-.pdf-placeholder--error svg { opacity: 0.6; }
+/* ── Visor y Botones ── */
+.pdf-viewer-area { flex: 1; padding: 16px 24px; min-height: 300px; display: flex; flex-direction: column; }
+.iframe-full { width: 100%; height: 100%; border: 1px solid #E5E7EB; border-radius: 8px; flex: 1; }
+.btn-primary-blue { background: #1D4ED8; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 
-/* ── Loading ── */
-.loading-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #6B7280; }
-.spinner { width: 36px; height: 36px; border: 3px solid #E5E7EB; border-top-color: #1D4ED8; border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* NUEVO: banner de error inline (reemplaza pantalla de error completa) */
-.error-banner {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 24px; background: #FEF2F2;
-  border-bottom: 1px solid #FECACA;
-  color: #991B1B; font-size: 13px; font-weight: 500; flex-shrink: 0;
-}
+.btn-modern { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #E5E7EB; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #fff; cursor: pointer; }
 
 /* ── Footer ── */
-.card-footer { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid #E5E7EB; flex-shrink: 0; background: #F9FAFB; } /* NUEVO: background en footer */
-.footer-left-content { display: flex; align-items: center; gap: 14px; }
-.footer-logo { width: 48px; height: 48px; object-fit: contain; border-radius: 8px; }
-.footer-copy h3 { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 2px; }
-.footer-copy p { font-size: 13px; color: #6B7280; }
-/* ... (Se mantienen todos tus estilos originales intactos) ... */
+.card-footer { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid #E5E7EB; background: #fff; flex-shrink: 0; }
+.footer-left-content { display: flex; align-items: center; gap: 12px; }
+.footer-logo { width: 44px; height: 44px; object-fit: contain; }
+.footer-copy h3 { font-size: 13px; font-weight: 700; color: #111827; }
 
-/* NUEVO: ESTILOS PARA EL MODAL DE ERROR */
-.error-modal-container {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .main-navbar { padding: 0 16px; height: auto; padding: 15px 0; }
+  .nav-content { flex-direction: column; gap: 15px; text-align: center; }
+  .viewport-body { padding: 10px; }
+  .invoice-title { flex-direction: column; align-items: flex-start; }
+  .data-row { flex-direction: column; align-items: flex-start; }
+  .card-footer { flex-direction: column; gap: 16px; }
+  .btn-primary-blue { width: 100%; }
 }
 
-.error-modal-content {
-  background: #fff;
-  border-radius: 12px;
-  padding: 40px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+/* ── Dark Mode ── */
+.dark-theme, .dark-theme .main-navbar, .dark-theme .document-card, .dark-theme .data-main-box, .dark-theme .card-footer { 
+  background: #1e293b !important; border-color: #334155 !important; 
 }
-
-.error-modal-icon {
-  color: #DC2626;
-  margin-bottom: 20px;
-}
-
-.error-modal-content h2 {
-  font-size: 22px;
-  color: #111827;
-  margin-bottom: 12px;
-}
-
-.error-modal-content p {
-  color: #6B7280;
-  font-size: 14px;
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-
-.error-modal-content .btn-primary-blue {
-  margin: 0 auto;
-}
-
-/* Modo oscuro para el modal */
-.dark-theme .error-modal-content {
-  background: #1e293b;
-  border: 1px solid #334155;
-}
-
-.dark-theme .error-modal-content h2 {
-  color: #f1f5f9;
-}
-
-.dark-theme .error-modal-content p {
-  color: #94a3b8;
-}
-
-/* ... (Continúan tus otros estilos de dark-theme, botones, etc.) ... */
-/* ── Dark mode ── */
-.dark-theme,
-.dark-theme .main-navbar,
-.dark-theme .viewport-body,
-.dark-theme .document-card,
-.dark-theme .data-gray-box,
-.dark-theme .card-footer { background: #1e293b !important; border-color: #334155 !important; color: #cbd5e1 !important; }
-.dark-theme { background: #0f172a !important; }
-.dark-theme .invoice-title,
-.dark-theme .footer-copy h3 { color: #f1f5f9 !important; }
-/* CAMBIO APLICADO: reemplazo de .data-val.bold por .data-label.label-bold */
-.dark-theme .data-label.label-bold { color: #f1f5f9 !important; }
-.dark-theme .tipo-label,
-.dark-theme .data-label,
-.dark-theme .footer-copy p { color: #94a3b8 !important; }
-.dark-theme .data-val,
-.dark-theme .loading-state { color: #cbd5e1 !important; }
-.dark-theme .data-val.accent { color: #60a5fa !important; }
-.dark-theme .btn-primary-blue { background: #3b82f6 !important; }
-.dark-theme .btn-primary-blue:hover { background: #60a5fa !important; }
-.dark-theme .btn-modern { background: #1e293b; border-color: #334155; color: #e2e8f0; }
-.dark-theme .btn-modern:hover { background: #1d3a5f; border-color: #60a5fa; color: #93c5fd; }
-.dark-theme .iframe-full { background: #0f172a; border-color: #334155; }
-.dark-theme .pdf-placeholder { border-color: #334155; color: #475569; }
-.dark-theme .pdf-placeholder--error { border-color: #7f1d1d; color: #fca5a5; }
-.dark-theme .spinner { border-color: #334155; border-top-color: #60a5fa; }
-.dark-theme .error-banner { background: #3b0d0d; border-color: #7f1d1d; color: #fca5a5; }
-.dark-theme .pdf-alerta { background: #422006; border-color: #78350F; color: #FDE68A; }
-.dark-theme .status-exito      { background: #064E3B !important; color: #6EE7B7 !important; }
-.dark-theme .status-preventivo { background: #451A03 !important; color: #FCD34D !important; }
-.dark-theme .status-error      { background: #450A0A !important; color: #FCA5A5 !important; }
-.dark-theme .status-informativo{ background: #1E3A5F !important; color: #93C5FD !important; }
-
-/* ── Responsive ── */
-@media (max-width: 640px) {
-  .viewport-body { padding: 12px 16px; }
-  .document-card { height: auto; min-height: min-content; margin-bottom: 20px; }
-  .header-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .card-footer { flex-direction: column; gap: 16px; text-align: center; }
-  .pdf-viewer-area { min-height: 450px; height: 500px; flex: none; padding: 12px 16px; }
-  .buttons-container { flex-direction: column; align-items: stretch; width: 100%; gap: 10px; }
-  .btn-modern { width: 100%; justify-content: center; }
-  /* NUEVO: en móvil los separadores y labels ocupan fila propia */
-  .data-sep { display: none; }
-  .data-label { width: 100%; margin-top: 4px; }
-}
+.dark-theme .label-bold, .dark-theme .numero-txt { color: #f1f5f9 !important; }

@@ -2,7 +2,9 @@
 
   <header class="main-navbar">
     <div class="nav-content">
-      <img src="/logo-removebg-preview.png" alt="Logo" class="logo-img" width="180" height="60">
+      <div class="logo-wrapper">
+        <img src="/logo-removebg-preview.png" alt="Logo" class="logo-img" width="180" height="60">
+      </div>
       <button class="btn-primary-blue" type="button">Iniciar Sesión</button>
     </div>
   </header>
@@ -31,8 +33,8 @@
         <div class="flex-gap header-row">
           <div class="title-group">
             <h1 class="invoice-title">
-              <strong>{{ tipoComprobante }}</strong>
-              <span *ngIf="facturaData?.numero">&nbsp;{{ facturaData?.numero }}</span>
+              <span class="tipo-txt">{{ tipoComprobante }}</span>
+              <span class="numero-txt" *ngIf="facturaData?.numero">{{ facturaData?.numero }}</span>
             </h1>
           </div>
           <span *ngIf="facturaData?.estado"
@@ -43,25 +45,25 @@
         </div>
       </div>
 
-      <div class="data-gray-box">
+      <div class="data-main-box">
         <div class="data-row">
-          <span class="data-label label-bold">Emisor</span>
-          <span class="data-val">{{ facturaData?.emisor?.nombre }}</span>
+          <span class="data-label label-bold">Emisor:</span>
+          <span class="data-val label-bold">{{ facturaData?.emisor?.nombre }}</span>
           <span class="data-sep">·</span>
-          <span class="data-label">RUC</span>
+          <span class="data-label">RUC:</span>
           <span class="data-val">{{ facturaData?.emisor?.ruc }}</span>
           <span class="data-sep">·</span>
-          <span class="data-label">Nombre Comercial</span>
+          <span class="data-label">Nombre Comercial:</span>
           <span class="data-val">{{ facturaData?.emisor?.nombreComercial }}</span>
         </div>
         <div class="data-row">
-          <span class="data-label label-bold">Receptor</span>
-          <span class="data-val">{{ facturaData?.receptor?.nombre }}</span>
+          <span class="data-label label-bold">Receptor:</span>
+          <span class="data-val label-bold">{{ facturaData?.receptor?.nombre }}</span>
           <span class="data-sep">·</span>
-          <span class="data-label">Correo</span>
+          <span class="data-label">Correo:</span>
           <span class="data-val accent">{{ facturaData?.receptor?.correo }}</span>
           <span class="data-sep">·</span>
-          <span class="data-label">Fecha Emisión</span>
+          <span class="data-label">Fecha Emisión:</span>
           <span class="data-val">{{ facturaData?.fechaEmision }}</span>
         </div>
       </div>
@@ -87,11 +89,8 @@
 
       <div class="pdf-viewer-area">
         <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full"></iframe>
-        <div *ngIf="!pdfUrl" class="pdf-placeholder" [class.pdf-placeholder--error]="!!pdfAlerta">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-          </svg>
-          <p>{{ pdfAlerta ? 'PDF no disponible' : 'Cargando previsualización...' }}</p>
+        <div *ngIf="!pdfUrl" class="pdf-placeholder">
+          <p>{{ pdfAlerta || 'Cargando previsualización...' }}</p>
         </div>
       </div>
 
