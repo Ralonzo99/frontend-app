@@ -14,10 +14,12 @@ import { FacturaHttpAdapter } from '../../../infrastructure/adapters/factura-htt
 export class FacturaViewComponent implements OnInit {
 
   pdfUrl: SafeResourceUrl | null = null;
-  isLoading = true;
+  isLoading = false;
   tokenActual = '';
   isDarkMode = false;
   errorMessage: string | null = null;
+  pdfAlerta: string | null = null;
+  tipoComprobante: string = 'Comprobante';
 
   facturaData: any = {
     numero: '',
@@ -25,6 +27,19 @@ export class FacturaViewComponent implements OnInit {
     emisor: { nombre: '', ruc: '', nombreComercial: '' },
     receptor: { nombre: '', correo: '' },
     fechaEmision: ''
+  };
+
+  // Mapa de códigos SRI y variantes de texto
+  private readonly nombresDocumentos: { [key: string]: string } = {
+    '01': 'Factura',
+    '04': 'Nota de Crédito',
+    '05': 'Nota de Débito',
+    '06': 'Guía de Remisión',
+    '07': 'Comprobante de Retención',
+    'FACTURA': 'Factura',
+    'RETENCION': 'Comprobante de Retención',
+    'RETENCIÓN': 'Comprobante de Retención',
+    'COMPROBANTE DE RETENCION': 'Comprobante de Retención'
   };
 
   constructor(
@@ -39,9 +54,11 @@ export class FacturaViewComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       this.isDarkMode = mediaQuery.matches;
+      this.applyDarkClass(this.isDarkMode);
 
       mediaQuery.addEventListener('change', e => {
         this.isDarkMode = e.matches;
+        this.applyDarkClass(e.matches);
         this.cdr.detectChanges();
       });
 
@@ -51,10 +68,17 @@ export class FacturaViewComponent implements OnInit {
           this.tokenActual = token;
           this.cargarData(token);
         } else {
-          this.isLoading = false;
           this.errorMessage = 'No se ha proporcionado un token válido.';
         }
       });
+    }
+  }
+
+  private applyDarkClass(dark: boolean): void {
+    if (dark) {
+      document.documentElement.classList.add('app-dark');
+    } else {
+      document.documentElement.classList.remove('app-dark');
     }
   }
 
@@ -62,41 +86,63 @@ export class FacturaViewComponent implements OnInit {
     try {
       this.isLoading = true;
       this.errorMessage = null;
+      this.pdfAlerta = null;
 
       const info = await this.facturaAdapter.getInfoComprobante({ tokenRequest: token });
 
       if (!info || !info.noComprobante) {
-        this.errorMessage = 'El enlace es incorrecto o ha expirado.';
+        this.errorMessage = 'El enlace ha expirado o es incorrecto.';
         return;
       }
 
+      // --- Lógica de lectura de JSON para el Título ---
+      const valorTipo = (info.tipoDocumento || info.codDoc || info.tipo || '').toString().toUpperCase().trim();
+      
+      if (this.nombresDocumentos[valorTipo]) {
+        this.tipoComprobante = this.nombresDocumentos[valorTipo];
+      } else if (valorTipo.includes('FACTURA')) {
+        this.tipoComprobante = 'Factura';
+      } else if (valorTipo.includes('RETENCION') || valorTipo.includes('RETENCIÓN')) {
+        this.tipoComprobante = 'Comprobante de Retención';
+      } else {
+        // Si no coincide con nada, intentamos usar el texto original o por defecto "Comprobante"
+        this.tipoComprobante = info.tipoDocumento || 'Comprobante';
+      }
+
       this.facturaData = {
-        numero: info.noComprobante || '---',
-        // MEJORA: Se eliminan guiones bajos para la vista
+        numero: info.noComprobante || '',
         estado: (info.estadoComprobante || '').replace(/_/g, ' '),
         emisor: {
-          nombre: info.emisor || '---',
-          ruc: info.ruc || '---',
-          nombreComercial: info.razonSocial || info.emisor || '---'
+          nombre: info.emisor || '',
+          ruc: info.ruc || '',
+          nombreComercial: info.razonSocial || info.emisor || ''
         },
         receptor: {
-          nombre: info.receptor || '---',
+          nombre: info.receptor || '',
           correo: info.correo || ''
         },
         fechaEmision: info.fechaEmision || ''
       };
 
-      const pdf = await this.facturaAdapter.getPDFComprobante({ tokenRequest: token });
-      if (pdf) {
-        const clean = this.cleanBase64(pdf);
-        const blob = this.base64ToBlob(clean, 'application/pdf');
-        const url = URL.createObjectURL(blob);
-        const viewerUrl = `${url}#toolbar=1&navpanes=0&scrollbar=1`;
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+      // Carga de PDF
+      try {
+        const pdf = await this.facturaAdapter.getPDFComprobante({ tokenRequest: token });
+        if (pdf) {
+          const clean = this.cleanBase64(pdf);
+          const blob = this.base64ToBlob(clean, 'application/pdf');
+          const url = URL.createObjectURL(blob);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `${url}#toolbar=1&navpanes=0&scrollbar=1`
+          );
+        } else {
+          this.pdfAlerta = 'El PDF no está disponible.';
+        }
+      } catch {
+        this.pdfAlerta = 'Error al cargar el visor PDF.';
       }
+
     } catch (error) {
-      console.error("Error al cargar comprobante:", error);
-      this.errorMessage = 'Error de conexión. No pudimos recuperar el documento.';
+      this.errorMessage = 'Error de comunicación con el servidor.';
     } finally {
       this.isLoading = false;
       this.cdr.detectChanges();
@@ -104,22 +150,16 @@ export class FacturaViewComponent implements OnInit {
   }
 
   getEstadoClass(estado: string): string {
-    // Normalización para comparación sin guiones
     const e = estado?.toUpperCase().replace(/_/g, ' ').trim() || '';
-    
     if (['AUTORIZADO', 'REGISTRADO'].includes(e)) return 'status-exito';
     if (['ANULADO'].includes(e)) return 'status-preventivo';
-    if (['ERROR', 'NO AUTORIZADO', 'NO ENCONTRADO', 'ERROR AL FIRMAR'].includes(e)) return 'status-error';
-    if (['GENERADO', 'FIRMADO', 'DEVUELTO', 'PROCESANDO', 'RECIBIDO'].includes(e)) return 'status-informativo';
-    
+    if (['ERROR', 'NO AUTORIZADO', 'ERROR AL FIRMAR'].includes(e)) return 'status-error';
     return 'status-informativo';
   }
 
   private cleanBase64(data: any): string {
     let str = String(data || '').trim();
-    if (str.startsWith('"') && str.endsWith('"')) {
-      str = str.substring(1, str.length - 1);
-    }
+    if (str.startsWith('"') && str.endsWith('"')) str = str.substring(1, str.length - 1);
     return str.replace(/['"]+/g, '');
   }
 
@@ -129,28 +169,25 @@ export class FacturaViewComponent implements OnInit {
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
-    return new Blob([new Uint8Array(byteNumbers)], { type: type });
+    return new Blob([new Uint8Array(byteNumbers)], { type });
   }
 
   async descargarPDF() {
+    if (!this.tokenActual) return;
     try {
       const base64 = await this.facturaAdapter.getPDFComprobante({ tokenRequest: this.tokenActual });
       const blob = this.base64ToBlob(this.cleanBase64(base64), 'application/pdf');
-      this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.pdf`);
-    } catch (e) {
-      console.error("Error al descargar PDF:", e);
-    }
+      this.descargarArchivo(blob, `${this.tipoComprobante}_${this.facturaData.numero}.pdf`);
+    } catch (e) { console.error(e); }
   }
 
   async descargarXML() {
+    if (!this.tokenActual) return;
     try {
-      let xmlBase64 = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
-      const cleanXmlBase64 = this.cleanBase64(xmlBase64);
-      const blob = this.base64ToBlob(cleanXmlBase64, 'application/xml');
-      this.descargarArchivo(blob, `Factura_${this.facturaData.numero}.xml`);
-    } catch (e) {
-      console.error("Error al descargar XML:", e);
-    }
+      const xmlBase64 = await this.facturaAdapter.getXMLComprobante({ tokenRequest: this.tokenActual });
+      const blob = this.base64ToBlob(this.cleanBase64(xmlBase64), 'application/xml');
+      this.descargarArchivo(blob, `${this.tipoComprobante}_${this.facturaData.numero}.xml`);
+    } catch (e) { console.error(e); }
   }
 
   private descargarArchivo(blob: Blob, nombre: string) {

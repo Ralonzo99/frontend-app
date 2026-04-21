@@ -8,77 +8,103 @@
   </header>
 
   <main class="viewport-body">
+
     <div *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Procesando documento...</p>
     </div>
 
-    <div *ngIf="!isLoading && errorMessage" class="error-container">
-      <div class="error-card">
-        <div class="error-icon-wrapper">⚠️</div>
+    <div *ngIf="errorMessage" class="error-modal-container">
+      <div class="error-modal-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="error-modal-icon">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
         <h2>Acceso Denegado</h2>
         <p>{{ errorMessage }}</p>
-        <button class="btn-modern" (click)="cargarData(tokenActual)">Reintentar carga</button>
+        <button class="btn-primary-blue" onclick="window.location.reload()">Reintentar</button>
       </div>
     </div>
 
     <div class="document-card" *ngIf="!isLoading && !errorMessage">
+
       <div class="row-padding border-bottom">
         <div class="flex-gap header-row">
-          <h1 class="invoice-title">Factura {{ facturaData?.numero }}</h1>
-          <span *ngIf="facturaData?.estado" 
-                class="status-badge" 
+          <div class="title-group">
+            <h1 class="invoice-title">
+              <strong>{{ tipoComprobante }}</strong>
+              <span *ngIf="facturaData?.numero">&nbsp;{{ facturaData?.numero }}</span>
+            </h1>
+          </div>
+          <span *ngIf="facturaData?.estado"
+                class="status-badge"
                 [ngClass]="getEstadoClass(facturaData?.estado)">
-               {{ facturaData?.estado }}
+            {{ facturaData?.estado }}
           </span>
         </div>
       </div>
 
       <div class="data-gray-box">
-        <div class="data-column">
-          <p>
-            <strong style="font-weight: 800; color: #111827; font-size: 13.5px; margin-right: 4px;">Emisor:</strong>
-            <span class="bold-value">{{ facturaData?.emisor?.nombre }}</span>
-            <span class="separator">|</span>
-            <span style="color: #6B7280; font-size: 13.5px;">RUC:</span>
-            <span class="data-value" style="margin-left: 4px;">{{ facturaData?.emisor?.ruc }}</span>
-            <span class="separator">|</span>
-            <span style="color: #6B7280; font-size: 13.5px;">Nombre Comercial:</span>
-            <span class="data-value" style="margin-left: 4px;">{{ facturaData?.emisor?.nombreComercial }}</span>
-          </p>
-          <p>
-            <strong style="font-weight: 800; color: #111827; font-size: 13.5px; margin-right: 4px;">Receptor:</strong>
-            <span class="bold-value">{{ facturaData?.receptor?.nombre }}</span>
-            <span class="separator">|</span>
-            <span style="color: #6B7280; font-size: 13.5px;">Correo:</span>
-            <span class="data-value text-blue" style="margin-left: 4px;">{{ facturaData?.receptor?.correo }}</span>
-            <span class="separator">|</span>
-            <span style="color: #6B7280; font-size: 13.5px;">Fecha Emisión:</span>
-            <span class="data-value" style="margin-left: 4px;">{{ facturaData?.fechaEmision }}</span>
-          </p>
+        <div class="data-row">
+          <span class="data-label label-bold">Emisor</span>
+          <span class="data-val">{{ facturaData?.emisor?.nombre }}</span>
+          <span class="data-sep">·</span>
+          <span class="data-label">RUC</span>
+          <span class="data-val">{{ facturaData?.emisor?.ruc }}</span>
+          <span class="data-sep">·</span>
+          <span class="data-label">Nombre Comercial</span>
+          <span class="data-val">{{ facturaData?.emisor?.nombreComercial }}</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label label-bold">Receptor</span>
+          <span class="data-val">{{ facturaData?.receptor?.nombre }}</span>
+          <span class="data-sep">·</span>
+          <span class="data-label">Correo</span>
+          <span class="data-val accent">{{ facturaData?.receptor?.correo }}</span>
+          <span class="data-sep">·</span>
+          <span class="data-label">Fecha Emisión</span>
+          <span class="data-val">{{ facturaData?.fechaEmision }}</span>
         </div>
       </div>
 
       <div class="row-padding border-bottom buttons-row">
-        <div class="flex-gap buttons-container">
-          <button class="btn-modern" (click)="descargarPDF()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32"><path fill="#f4f4f4" d="M24.031 2H8.808v27.928h20.856V7.873z"/><path fill="#dd2025" d="M22.472 10.211H2.395V3.379h20.077z"/><path fill="#fff" d="M6.3 5.5h2.5v1.2H7.6v1.1h1.1v1.1H7.6v2h-1.3zm3.7 0h1.6c1.2 0 2 .7 2 2.1s-.8 2.2-2 2.2h-1.6zm1.3 3.2h.3c.6 0 .8-.4.8-1.1s-.2-1.1-.8-1.1h-.3zm5.1-3.2h2.5v1.1h-1.2v0.4h1.1v1.1h-1.1v0.5h1.2v1.1h-2.5z"/></svg>
+        <div class="buttons-container">
+          <button class="btn-modern btn-pdf" (click)="descargarPDF()" [disabled]="!tokenActual">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32">
+              <path fill="#f4f4f4" d="M24.031 2H8.808v27.928h20.856V7.873z"/>
+              <path fill="#dd2025" d="M22.472 10.211H2.395V3.379h20.077z"/>
+              <path fill="#fff" d="M6.3 5.5h2.5v1.2H7.6v1.1h1.1v1.1H7.6v2h-1.3zm3.7 0h1.6c1.2 0 2 .7 2 2.1s-.8 2.2-2 2.2h-1.6zm1.3 3.2h.3c.6 0 .8-.4.8-1.1s-.2-1.1-.8-1.1h-.3zm5.1-3.2h2.5v1.1h-1.2v0.4h1.1v1.1h-1.1v0.5h1.2v1.1h-2.5z"/>
+            </svg>
             <span>Descargar PDF (RIDE)</span>
           </button>
-          <button class="btn-modern" (click)="descargarXML()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ffa726" d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2"/></svg>
+          <button class="btn-modern btn-xml" (click)="descargarXML()" [disabled]="!tokenActual">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
             <span>Descargar XML</span>
           </button>
         </div>
       </div>
 
+      <div *ngIf="pdfAlerta && !pdfUrl" class="pdf-alerta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>{{ pdfAlerta }}</span>
+      </div>
+
       <div class="pdf-viewer-area">
         <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="iframe-full"></iframe>
+        <div *ngIf="!pdfUrl" class="pdf-placeholder" [class.pdf-placeholder--error]="!!pdfAlerta">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <p>{{ pdfAlerta ? 'PDF no disponible' : 'Cargando previsualización...' }}</p>
+        </div>
       </div>
 
       <footer class="card-footer">
         <div class="footer-left-content">
-          <img src="/logo-inf-removebg-preview.png" class="footer-logo" alt="Icono historial">
+          <img src="/logo-inf-removebg-preview.png" class="footer-logo">
           <div class="footer-copy">
             <h3>Acceso al historial de tus comprobantes recibidos</h3>
             <p>✅ En un click filtra y descarga PDF y XML cuando los necesites</p>
@@ -87,5 +113,6 @@
         <button class="btn-primary-blue" type="button">Acceder al Portal</button>
       </footer>
     </div>
+
   </main>
 </div>
